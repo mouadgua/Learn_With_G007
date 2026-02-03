@@ -8,37 +8,35 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/canvas-confetti/1.6.0/confetti.browser.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
     <script>
-        tailwind.config = { theme: { extend: { fontFamily: { sans: ['Inter'], mono: ['JetBrains Mono'] }, colors: { 'agent-black': '#050505', 'agent-green': '#00ff41', 'agent-gold': '#d4af37' } } } }
+        tailwind.config = { theme: { extend: { fontFamily: { sans: ['Inter'], mono: ['JetBrains Mono'] }, colors: { 'agent-light': '#f9fafb', 'agent-green': '#00a82d', 'agent-gold': '#b8860b' } } } }
     </script>
     <style>
-        /* Optimisations tactiles et visuelles pour Mobile */
-        body { background-color: #050505; color: #fff; touch-action: none; }
+        body { background-color: #f9fafb; color: #111827; touch-action: none; }
         .terminal-scroll::-webkit-scrollbar { width: 4px; }
-        .terminal-scroll::-webkit-scrollbar-track { background: #121212; }
-        .terminal-scroll::-webkit-scrollbar-thumb { background: #333; border-radius: 2px; }
+        .terminal-scroll::-webkit-scrollbar-track { background: #f3f4f6; }
+        .terminal-scroll::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 2px; }
         .fade-in { animation: fadeIn 0.3s ease-out forwards; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
-        /* Empêche le zoom iOS sur l'input */
         input[type="text"] { font-size: 16px !important; } 
     </style>
 </head>
 <body class="h-[100dvh] flex flex-col font-sans antialiased overflow-hidden">
 
-    <nav class="bg-agent-black/90 backdrop-blur-md border-b border-agent-green/20 px-4 py-3 flex justify-between items-center shrink-0 z-50">
+    <nav class="bg-white border-b border-gray-200 px-4 py-3 flex justify-between items-center shrink-0 z-50">
         <h1 class="font-mono text-lg md:text-xl font-bold text-agent-gold">CHAMBRE<span class="text-agent-green">007</span></h1>
-        <div class="flex space-x-4 md:space-x-8 font-mono text-xs md:text-sm text-gray-400">
-            <a href="index.html" class="hover:text-agent-green transition">COURS</a>
-            <span class="text-agent-green border-b border-agent-green pb-1">TP / SIMULATEUR</span>
-            <a href="quiz.html" class="hover:text-agent-green transition">EXAMEN</a>
+        <div class="flex space-x-4 md:space-x-8 font-mono text-xs md:text-sm text-gray-600">
+            <a href="index.html" class="hover:text-agent-gold transition">COURS</a>
+            <span class="text-agent-green border-b-2 border-agent-green pb-1 font-bold">TP / SIMULATEUR</span>
+            <a href="fun_3d.html" class="hover:text-agent-gold transition">Espace nosql</a>
         </div>
     </nav>
 
-    <header class="bg-zinc-950 border-b border-zinc-800 p-2 md:p-3 flex flex-row justify-between items-center shrink-0 z-40">
+    <header class="bg-gray-50 border-b border-gray-200 p-2 md:p-3 flex flex-row justify-between items-center shrink-0 z-40">
         <div>
-            <span class="font-bold text-xs md:text-sm text-gray-300">MONGOSH EXPERT [40 Req]</span>
+            <span class="font-bold text-xs md:text-sm text-gray-700">MONGOSH EXPERT [40 Req]</span>
         </div>
         <div class="flex items-center space-x-2 md:space-x-4">
-            <div class="w-20 md:w-64 bg-zinc-800 h-1.5 md:h-2 rounded-full overflow-hidden">
+            <div class="w-20 md:w-64 bg-gray-200 h-1.5 md:h-2 rounded-full overflow-hidden">
                 <div id="progress-bar" class="bg-agent-green h-full w-0 transition-all duration-300"></div>
             </div>
             <span class="font-mono text-agent-green font-bold text-xs md:text-sm"><span id="total-steps">0</span>/40</span>
@@ -47,69 +45,63 @@
 
     <div class="flex-1 flex flex-col lg:flex-row min-h-0 h-full">
         
-        <aside class="w-full lg:w-5/12 h-[40%] lg:h-full bg-zinc-900 border-b lg:border-b-0 lg:border-r border-zinc-800 p-3 md:p-6 overflow-y-auto space-y-4 md:space-y-6">
+        <aside class="w-full lg:w-5/12 h-[40%] lg:h-full bg-white border-b lg:border-b-0 lg:border-r border-gray-200 p-3 md:p-6 overflow-y-auto space-y-4 md:space-y-6">
             
-            <div id="ex-1" class="bg-black border border-agent-green shadow-[0_0_15px_rgba(0,255,65,0.1)] rounded-lg p-3 md:p-5 transition-all">
-                <span class="text-[10px] md:text-xs bg-agent-green text-black px-1.5 py-0.5 font-bold rounded">PHASE 1 : INGESTION (10 Req)</span>
-                <h3 class="font-bold text-sm md:text-lg mt-2 mb-1">Architecture & Insertion</h3>
-                <p class="text-gray-400 text-xs md:text-sm mb-2">Situation : Initialise la base et insère un flux massif de données.</p>
-                <div class="bg-zinc-800 p-2 rounded text-xs md:text-sm text-gray-300">
+            <div id="ex-1" class="bg-white border border-agent-green shadow-md rounded-lg p-3 md:p-5 transition-all">
+                <span class="text-[10px] md:text-xs bg-agent-green text-white px-1.5 py-0.5 font-bold rounded">PHASE 1 : INGESTION (10 Req)</span>
+                <h3 class="font-bold text-sm md:text-lg mt-2 mb-1 text-gray-900">Architecture & Insertion</h3>
+                <p class="text-gray-600 text-xs md:text-sm mb-2">Situation : Initialise la base et insère un flux massif de données.</p>
+                <div class="bg-gray-50 border border-gray-100 p-2 rounded text-xs md:text-sm">
                     <p class="font-bold text-agent-green mb-0.5">Cible :</p>
-                    <div id="current-task-1" class="font-bold text-white mb-2">Sélectionne la base 'mi6_data'.</div>
+                    <div id="current-task-1" class="font-bold text-gray-800 mb-2">Sélectionne la base 'mi6_data'.</div>
                     <p class="font-bold text-agent-gold mb-0.5">💡 Indice :</p>
-                    <div id="current-hint-1" class="font-mono text-gray-400 bg-black p-1.5 rounded text-[11px] md:text-sm">use mi6_data</div>
+                    <div id="current-hint-1" class="font-mono text-gray-600 bg-gray-200 p-1.5 rounded text-[11px] md:text-sm">use mi6_data</div>
                 </div>
             </div>
 
-            <div id="ex-2" class="bg-black border border-zinc-700 rounded-lg p-3 md:p-5 opacity-50 pointer-events-none transition-all">
-                <span class="text-[10px] md:text-xs bg-zinc-700 text-white px-1.5 py-0.5 font-bold rounded">PHASE 2 : FILTRAGE (10 Req)</span>
-                <h3 class="font-bold text-sm md:text-lg mt-2 mb-1">Opérateurs & Projections</h3>
-                <p class="text-gray-400 text-xs md:text-sm mb-2">Situation : Fouille les données avec des opérateurs complexes ($gt, $in, $or).</p>
-                <div class="bg-zinc-800 p-2 rounded text-xs md:text-sm text-gray-300">
-                    <p class="font-bold text-agent-green mb-0.5">Cible :</p>
-                    <div id="current-task-2" class="font-bold text-white mb-2">Verrouillé.</div>
-                    <p class="font-bold text-agent-gold mb-0.5">💡 Indice :</p>
-                    <div id="current-hint-2" class="font-mono text-gray-400 bg-black p-1.5 rounded text-[11px] md:text-sm">...</div>
+            <div id="ex-2" class="bg-gray-50 border border-gray-200 rounded-lg p-3 md:p-5 opacity-60 pointer-events-none transition-all">
+                <span class="text-[10px] md:text-xs bg-gray-600 text-white px-1.5 py-0.5 font-bold rounded">PHASE 2 : FILTRAGE (10 Req)</span>
+                <h3 class="font-bold text-sm md:text-lg mt-2 mb-1 text-gray-900">Opérateurs & Projections</h3>
+                <div class="bg-gray-100 p-2 rounded text-xs md:text-sm text-gray-500 mt-2">
+                    <div id="current-task-2" class="font-bold mb-2">Verrouillé.</div>
+                    <p class="font-bold mb-0.5">💡 Indice :</p>
+                    <div id="current-hint-2" class="font-mono bg-gray-200 p-1.5 rounded text-[11px] md:text-sm">...</div>
                 </div>
             </div>
 
-            <div id="ex-3" class="bg-black border border-zinc-700 rounded-lg p-3 md:p-5 opacity-50 pointer-events-none transition-all">
-                <span class="text-[10px] md:text-xs bg-zinc-700 text-white px-1.5 py-0.5 font-bold rounded">PHASE 3 : MUTATION (10 Req)</span>
-                <h3 class="font-bold text-sm md:text-lg mt-2 mb-1">Updates & Tableaux</h3>
-                <p class="text-gray-400 text-xs md:text-sm mb-2">Situation : Modifie les structures existantes via $set, $inc, $push.</p>
-                <div class="bg-zinc-800 p-2 rounded text-xs md:text-sm text-gray-300">
-                    <p class="font-bold text-agent-green mb-0.5">Cible :</p>
-                    <div id="current-task-3" class="font-bold text-white mb-2">Verrouillé.</div>
-                    <p class="font-bold text-agent-gold mb-0.5">💡 Indice :</p>
-                    <div id="current-hint-3" class="font-mono text-gray-400 bg-black p-1.5 rounded text-[11px] md:text-sm">...</div>
+            <div id="ex-3" class="bg-gray-50 border border-gray-200 rounded-lg p-3 md:p-5 opacity-60 pointer-events-none transition-all">
+                <span class="text-[10px] md:text-xs bg-gray-600 text-white px-1.5 py-0.5 font-bold rounded">PHASE 3 : MUTATION (10 Req)</span>
+                <h3 class="font-bold text-sm md:text-lg mt-2 mb-1 text-gray-900">Updates & Tableaux</h3>
+                <div class="bg-gray-100 p-2 rounded text-xs md:text-sm text-gray-500 mt-2">
+                    <div id="current-task-3" class="font-bold mb-2">Verrouillé.</div>
+                    <p class="font-bold mb-0.5">💡 Indice :</p>
+                    <div id="current-hint-3" class="font-mono bg-gray-200 p-1.5 rounded text-[11px] md:text-sm">...</div>
                 </div>
             </div>
 
-            <div id="ex-4" class="bg-black border border-zinc-700 rounded-lg p-3 md:p-5 opacity-50 pointer-events-none transition-all">
-                <span class="text-[10px] md:text-xs bg-zinc-700 text-white px-1.5 py-0.5 font-bold rounded">PHASE 4 : PURGE (10 Req)</span>
-                <h3 class="font-bold text-sm md:text-lg mt-2 mb-1">Embedding & Indexation</h3>
-                <p class="text-gray-400 text-xs md:text-sm mb-2">Situation : Crée des relations par imbrication (Embedding) et purge la base.</p>
-                <div class="bg-zinc-800 p-2 rounded text-xs md:text-sm text-gray-300">
-                    <p class="font-bold text-agent-green mb-0.5">Cible :</p>
-                    <div id="current-task-4" class="font-bold text-white mb-2">Verrouillé.</div>
-                    <p class="font-bold text-agent-gold mb-0.5">💡 Indice :</p>
-                    <div id="current-hint-4" class="font-mono text-gray-400 bg-black p-1.5 rounded text-[11px] md:text-sm">...</div>
+            <div id="ex-4" class="bg-gray-50 border border-gray-200 rounded-lg p-3 md:p-5 opacity-60 pointer-events-none transition-all">
+                <span class="text-[10px] md:text-xs bg-gray-600 text-white px-1.5 py-0.5 font-bold rounded">PHASE 4 : PURGE (10 Req)</span>
+                <h3 class="font-bold text-sm md:text-lg mt-2 mb-1 text-gray-900">Embedding & Indexation</h3>
+                <div class="bg-gray-100 p-2 rounded text-xs md:text-sm text-gray-500 mt-2">
+                    <div id="current-task-4" class="font-bold mb-2">Verrouillé.</div>
+                    <p class="font-bold mb-0.5">💡 Indice :</p>
+                    <div id="current-hint-4" class="font-mono bg-gray-200 p-1.5 rounded text-[11px] md:text-sm">...</div>
                 </div>
             </div>
 
         </aside>
 
-        <main class="w-full lg:w-7/12 h-[60%] lg:h-full bg-black p-2 md:p-4 flex flex-col min-h-0">
-            <div class="flex-1 bg-zinc-900 border border-zinc-700 rounded-lg shadow-2xl flex flex-col overflow-hidden font-mono text-xs md:text-sm">
-                <div class="bg-zinc-800 px-3 py-1.5 md:py-2 flex items-center border-b border-zinc-700 text-gray-400 text-xs">
+        <main class="w-full lg:w-7/12 h-[60%] lg:h-full bg-gray-100 p-2 md:p-4 flex flex-col min-h-0">
+            <div class="flex-1 bg-gray-900 border border-gray-300 rounded-lg shadow-lg flex flex-col overflow-hidden font-mono text-xs md:text-sm">
+                <div class="bg-gray-800 px-3 py-1.5 md:py-2 flex items-center border-b border-gray-700 text-gray-300 text-xs">
                     root@terminal: <span class="text-agent-green ml-1">~/mongosh</span>
                 </div>
                 
-                <div id="terminal-out" class="flex-1 p-3 md:p-4 overflow-y-auto terminal-scroll space-y-1">
+                <div id="terminal-out" class="flex-1 p-3 md:p-4 overflow-y-auto terminal-scroll space-y-1 text-gray-200">
                     <p class="text-agent-gold fade-in">> MONGOSH SYSTEM READY. [4 PHASES]</p>
                 </div>
 
-                <div class="bg-black p-2 md:p-4 border-t border-zinc-700 flex items-center">
+                <div class="bg-gray-900 p-2 md:p-4 border-t border-gray-700 flex items-center">
                     <span class="text-agent-green mr-2 font-bold">❯</span>
                     <input type="text" id="terminal-in" class="bg-transparent border-none outline-none text-white w-full h-8 md:h-auto" placeholder="Tapez..." autocomplete="off" autocapitalize="none">
                 </div>
@@ -122,12 +114,8 @@
         const output = document.getElementById('terminal-out');
         const totalStepsDisplay = document.getElementById('total-steps');
         const progressBar = document.getElementById('progress-bar');
-        
-        let currentEx = 1;
-        let stepIndex = 0;
-        let totalProgress = 0;
+        let currentEx = 1; let stepIndex = 0; let totalProgress = 0;
 
-        // MOTEUR DE SCÉNARIO 4 PHASES (40 requêtes + Indices Uniques)
         const missions = {
             1: [
                 { task: "Sélectionne la base 'mi6_data'", cmd: "use mi6_data", hint: "use mi6_data" },
@@ -188,7 +176,6 @@
             else if (type === "json") p.className += "text-gray-500 italic ml-2 md:ml-4";
             p.textContent = type === "user" ? `❯ ${text}` : text;
             output.appendChild(p);
-            // Auto-scroll pour mobile
             output.scrollTop = output.scrollHeight; 
         }
 
@@ -200,24 +187,23 @@
         }
 
         function unlockNextExercise() {
-            document.getElementById(`ex-${currentEx}`).classList.remove('border-agent-green', 'shadow-[0_0_15px_rgba(0,255,65,0.1)]');
-            document.getElementById(`ex-${currentEx}`).classList.add('border-zinc-700');
+            document.getElementById(`ex-${currentEx}`).classList.remove('border-agent-green', 'shadow-md');
+            document.getElementById(`ex-${currentEx}`).classList.add('border-gray-200');
             
             currentEx++;
             if(currentEx <= 4) {
                 const nextEx = document.getElementById(`ex-${currentEx}`);
-                nextEx.classList.remove('opacity-50', 'pointer-events-none', 'border-zinc-700');
-                nextEx.classList.add('border-agent-green', 'shadow-[0_0_15px_rgba(0,255,65,0.1)]');
-                // Auto-scroll l'aside sur mobile
+                nextEx.classList.remove('opacity-60', 'pointer-events-none', 'border-gray-200', 'bg-gray-50');
+                nextEx.classList.add('border-agent-green', 'shadow-md', 'bg-white');
                 nextEx.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); 
                 updateUI();
             } else {
                 confetti({ particleCount: 500, spread: 160, origin: { y: 0.6 } });
-                writeLog("██████████████████████████████████████████████", "success");
+                writeLog("================================================", "success");
                 writeLog("🏆 EXCELLENCE : 40 REQUÊTES VALIDÉES. TP TERMINÉ", "success");
-                writeLog("██████████████████████████████████████████████", "success");
+                writeLog("================================================", "success");
                 input.disabled = true;
-                input.blur(); // Cache le clavier virtuel sur mobile
+                input.blur();
             }
         }
 
@@ -233,31 +219,21 @@
 
                 const currentStep = missions[currentEx][stepIndex];
                 
-                // VALIDATION ENGINE
                 let isValid = cmd.includes(currentStep.cmd);
-                if (currentStep.includes) {
-                    isValid = isValid && cmd.includes(currentStep.includes);
-                }
+                if (currentStep.includes) isValid = isValid && cmd.includes(currentStep.includes);
 
                 if (isValid) {
                     writeLog("{ status: 'ok', n: 1 }", "json");
                     writeLog("✅ Opération réussie.", "success");
-                    
                     totalProgress++;
                     totalStepsDisplay.textContent = totalProgress;
                     progressBar.style.width = (totalProgress / 40 * 100) + '%';
-
                     stepIndex++;
                     if (stepIndex >= 10) {
                         writeLog(`[PHASE ${currentEx} COMPLÉTÉE]`, "success");
-                        stepIndex = 0;
-                        unlockNextExercise();
-                    } else {
-                        updateUI();
-                    }
-                } else {
-                    writeLog(`❌ Erreur. La commande attendue est : ${currentStep.hint}`, "error");
-                }
+                        stepIndex = 0; unlockNextExercise();
+                    } else updateUI();
+                } else writeLog(`❌ Erreur. La commande attendue est : ${currentStep.hint}`, "error");
             }
         });
     </script>

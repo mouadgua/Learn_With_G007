@@ -9,140 +9,133 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
     <script>
-        tailwind.config = { theme: { extend: { fontFamily: { sans: ['Inter'], mono: ['JetBrains Mono'] }, colors: { 'agent-black': '#050505', 'agent-green': '#00ff41', 'agent-gold': '#d4af37' } } } }
+        tailwind.config = { theme: { extend: { fontFamily: { sans: ['Inter'], mono: ['JetBrains Mono'] }, colors: { 'agent-light': '#f9fafb', 'agent-green': '#00a82d', 'agent-gold': '#b8860b' } } } }
     </script>
     <style>
-        body { background-color: #050505; color: #fff; overflow-x: hidden; }
-        .glitch-hover:hover { text-shadow: 2px 2px #00ff41, -2px -2px #d4af37; transition: text-shadow 0.2s; }
-        /* Style pour l'impression (Téléchargement PDF) */
+        body { background-color: #f9fafb; color: #111827; overflow-x: hidden; }
+        .hover-gold:hover { color: #b8860b; transition: color 0.2s; }
         @media print {
             body { background: white !important; color: black !important; }
             nav, header, button { display: none !important; }
             #cheatsheet { page-break-before: always; border: none; }
-            .bg-black { background: white !important; color: black !important; border: 1px solid #ccc; }
         }
     </style>
 </head>
 <body class="font-sans antialiased">
 
-    <nav class="fixed w-full bg-agent-black/90 backdrop-blur-md border-b border-agent-green/20 z-50">
+    <nav class="fixed w-full bg-white/90 backdrop-blur-md border-b border-gray-200 z-50">
         <div class="max-w-7xl mx-auto px-4 py-4 flex flex-col md:flex-row justify-between items-center">
             <h1 class="font-mono text-xl md:text-2xl font-bold text-agent-gold mb-2 md:mb-0">CHAMBRE<span class="text-agent-green">007</span></h1>
-            <div class="flex flex-wrap justify-center gap-4 font-mono text-xs md:text-sm text-gray-400">
-                <span class="text-agent-green border-b border-agent-green pb-1 cursor-default">COURS COMPLET</span>
-                <a href="tp.html" class="hover:text-agent-green transition">SIMULATEUR (TP)</a>
-                <a href="quiz.html" class="hover:text-agent-green transition">EXAMEN FINAL</a>
+            <div class="flex flex-wrap justify-center gap-4 font-mono text-xs md:text-sm text-gray-600">
+                <span class="text-agent-green border-b-2 border-agent-green pb-1 cursor-default font-bold">COURS COMPLET</span>
+                <a href="tp.html" class="hover-gold transition">SIMULATEUR (TP)</a>
+                <a href="fun_3d.html" class="hover-gold transition">Espace nosql</a>
             </div>
         </div>
     </nav>
 
-    <header class="min-h-screen flex items-center justify-center relative px-4 pt-20">
-        <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,_#004d16_0%,_#050505_70%)] opacity-50"></div>
+    <header class="min-h-screen flex items-center justify-center relative px-4 pt-20 bg-[radial-gradient(circle_at_center,_#e5e7eb_0%,_#f9fafb_70%)]">
         <div class="z-10 text-center max-w-4xl" id="hero-text">
-            <p class="text-agent-green font-mono mb-4 tracking-[0.3em] uppercase animate-pulse">Dossier de Renseignement : NoSQL</p>
-            <h2 class="text-5xl md:text-8xl font-black mb-6 leading-tight">MASTERING <span class="text-agent-green">NOSQL</span></h2>
-            <p class="text-gray-400 text-base md:text-lg mb-8 max-w-2xl mx-auto leading-relaxed">
+            <p class="text-agent-green font-mono mb-4 tracking-[0.3em] uppercase animate-pulse font-bold">Dossier de Renseignement : NoSQL</p>
+            <h2 class="text-5xl md:text-8xl font-black mb-6 leading-tight text-gray-900">MASTERING <span class="text-agent-green">NOSQL</span></h2>
+            <p class="text-gray-600 text-base md:text-lg mb-8 max-w-2xl mx-auto leading-relaxed">
                 Le Big Data et l'IoT ont redéfini les règles. Les bases de données traditionnelles ont atteint leurs limites. Plongez dans l'architecture distribuée qui propulse l'intelligence artificielle et le Cloud moderne.
             </p>
-            <a href="#cours" class="bg-agent-green text-black font-mono px-8 py-3 rounded shadow-[0_0_15px_#00ff41] inline-block hover:scale-105 transition">DÉCRYPTER LES 7 CHAPITRES</a>
+            <a href="#cours" class="bg-agent-green text-white font-mono font-bold px-8 py-3 rounded shadow-lg hover:bg-agent-gold hover:scale-105 transition">DÉCRYPTER LES 7 CHAPITRES</a>
         </div>
     </header>
 
-    <main id="cours" class="max-w-7xl mx-auto px-4 py-12 md:py-20 space-y-24">
+    <main id="cours" class="max-w-7xl mx-auto px-4 py-12 md:py-20 space-y-24 text-gray-800">
 
         <section class="gsap-section">
-            <h3 class="text-3xl md:text-4xl font-bold mb-8 flex items-center"><span class="text-agent-gold font-mono mr-4 text-2xl">01 //</span> Définition & Comparaison Traditionnelle</h3>
-            <p class="text-gray-300 mb-6 text-lg">NoSQL (Not Only SQL) est une approche flexible qui s'affranchit du modèle relationnel rigide pour exceller dans la gestion massive de données non structurées.</p>
+            <h3 class="text-3xl md:text-4xl font-bold mb-8 flex items-center text-gray-900"><span class="text-agent-gold font-mono mr-4 text-2xl">01 //</span> Définition & Comparaison</h3>
+            <p class="text-gray-700 mb-6 text-lg">NoSQL (Not Only SQL) est une approche flexible qui s'affranchit du modèle relationnel rigide pour exceller dans la gestion massive de données non structurées.</p>
             
-            
-
             <div class="grid md:grid-cols-2 gap-8 mt-6">
-                <div class="bg-black/80 border border-zinc-800 p-8 rounded-lg">
-                    <h4 class="text-red-500 font-bold text-xl mb-4 border-b border-red-500/30 pb-2">L'Ancien Monde (Relationnel / SQL)</h4>
-                    <ul class="text-sm text-gray-400 space-y-3">
-                        <li><b class="text-white">Structure :</b> Tables rigides avec schémas fixes (colonnes prédéfinies).</li>
-                        <li><b class="text-white">Scalabilité Verticale :</b> Pour gérer plus de charge, on doit ajouter du CPU/RAM à un serveur unique (très coûteux).</li>
-                        <li><b class="text-white">Transactions :</b> ACID strict, garantissant une cohérence forte immédiate.</li>
-                        <li><b class="text-white">Cas d'usage :</b> Applications transactionnelles critiques (banques, ERP).</li>
+                <div class="bg-white border border-gray-200 p-8 rounded-lg shadow-sm">
+                    <h4 class="text-red-600 font-bold text-xl mb-4 border-b border-red-200 pb-2">L'Ancien Monde (Relationnel / SQL)</h4>
+                    <ul class="text-sm text-gray-600 space-y-3">
+                        <li><b class="text-gray-800">Structure :</b> Tables rigides avec schémas fixes.</li>
+                        <li><b class="text-gray-800">Scalabilité Verticale :</b> Augmentation du CPU/RAM d'un seul serveur (très coûteux).</li>
+                        <li><b class="text-gray-800">Transactions :</b> ACID strict, cohérence forte immédiate.</li>
+                        <li><b class="text-gray-800">Cas d'usage :</b> Applications transactionnelles critiques (banques).</li>
                     </ul>
                 </div>
-                <div class="bg-black/80 border border-agent-green p-8 rounded-lg shadow-[0_0_15px_rgba(0,255,65,0.1)]">
-                    <h4 class="text-agent-green font-bold text-xl mb-4 border-b border-agent-green/30 pb-2">Le Nouveau Monde (NoSQL)</h4>
-                    <ul class="text-sm text-gray-400 space-y-3">
-                        <li><b class="text-white">Structure :</b> Schémas flexibles et documents imbriqués.</li>
-                        <li><b class="text-white">Scalabilité Horizontale :</b> Ajout de serveurs standards en cluster pour répartir la charge infiniment.</li>
-                        <li><b class="text-white">Transactions :</b> BASE, acceptant une "cohérence éventuelle" pour favoriser la vitesse.</li>
-                        <li><b class="text-white">Cas d'usage :</b> Big Data, Temps réel, Réseaux sociaux.</li>
+                <div class="bg-white border border-agent-green p-8 rounded-lg shadow-md">
+                    <h4 class="text-agent-green font-bold text-xl mb-4 border-b border-green-200 pb-2">Le Nouveau Monde (NoSQL)</h4>
+                    <ul class="text-sm text-gray-600 space-y-3">
+                        <li><b class="text-gray-800">Structure :</b> Schémas flexibles et documents imbriqués.</li>
+                        <li><b class="text-gray-800">Scalabilité Horizontale :</b> Ajout de serveurs standards en cluster.</li>
+                        <li><b class="text-gray-800">Transactions :</b> BASE, acceptant une "cohérence éventuelle".</li>
+                        <li><b class="text-gray-800">Cas d'usage :</b> Big Data, Temps réel, Réseaux sociaux.</li>
                     </ul>
                 </div>
             </div>
         </section>
 
         <section class="gsap-section">
-            <h3 class="text-3xl md:text-4xl font-bold mb-8 flex items-center"><span class="text-agent-gold font-mono mr-4 text-2xl">02 //</span> Superpouvoirs & Familles NoSQL</h3>
+            <h3 class="text-3xl md:text-4xl font-bold mb-8 flex items-center text-gray-900"><span class="text-agent-gold font-mono mr-4 text-2xl">02 //</span> Superpouvoirs & Familles NoSQL</h3>
             
             <div class="mb-10 grid md:grid-cols-4 gap-4 text-sm">
-                <div class="bg-zinc-900 p-4 rounded border-t-2 border-agent-gold"><b class="text-white">Schéma Flexible</b><br><span class="text-gray-400">Ajout de champs à chaud sans migration complexe.</span></div>
-                <div class="bg-zinc-900 p-4 rounded border-t-2 border-agent-gold"><b class="text-white">Haute Scalabilité</b><br><span class="text-gray-400">Gestion de millions de requêtes par architecture distribuée.</span></div>
-                <div class="bg-zinc-900 p-4 rounded border-t-2 border-agent-gold"><b class="text-white">Haute Disponibilité</b><br><span class="text-gray-400">Réplication automatique. Zéro panne même si un nœud tombe.</span></div>
-                <div class="bg-zinc-900 p-4 rounded border-t-2 border-agent-gold"><b class="text-white">Performance</b><br><span class="text-gray-400">Latence minimale pour lectures/écritures massives.</span></div>
+                <div class="bg-white p-4 rounded-lg shadow-sm border-t-4 border-agent-gold"><b class="text-gray-900">Schéma Flexible</b><br><span class="text-gray-600">Ajout de champs à chaud sans migration.</span></div>
+                <div class="bg-white p-4 rounded-lg shadow-sm border-t-4 border-agent-gold"><b class="text-gray-900">Haute Scalabilité</b><br><span class="text-gray-600">Gestion de millions de requêtes.</span></div>
+                <div class="bg-white p-4 rounded-lg shadow-sm border-t-4 border-agent-gold"><b class="text-gray-900">Haute Disponibilité</b><br><span class="text-gray-600">Réplication automatique.</span></div>
+                <div class="bg-white p-4 rounded-lg shadow-sm border-t-4 border-agent-gold"><b class="text-gray-900">Performance</b><br><span class="text-gray-600">Latence minimale pour écritures massives.</span></div>
             </div>
 
             <h4 class="text-xl font-bold mb-4 text-agent-green">Les 4 Grandes Familles :</h4>
-            <div class="grid md:grid-cols-2 gap-6 text-sm text-gray-300">
-                <div class="bg-black p-6 border border-zinc-800 rounded">
-                    <h5 class="font-bold text-lg text-white mb-2">1. Clé-Valeur (ex: Redis)</h5>
+            <div class="grid md:grid-cols-2 gap-6 text-sm text-gray-700">
+                <div class="bg-white p-6 border border-gray-200 rounded-lg shadow-sm">
+                    <h5 class="font-bold text-lg text-gray-900 mb-2">1. Clé-Valeur (ex: Redis)</h5>
                     <p>Chaque clé unique est associée à une valeur. Idéal pour le cache et les sessions.</p>
                 </div>
-                <div class="bg-black p-6 border border-zinc-800 rounded">
-                    <h5 class="font-bold text-lg text-white mb-2">2. Documents (ex: MongoDB)</h5>
-                    <p>Stockage JSON/BSON semi-structuré. Parfait pour les applications Web Full Stack et CMS.</p>
+                <div class="bg-white p-6 border border-gray-200 rounded-lg shadow-sm">
+                    <h5 class="font-bold text-lg text-gray-900 mb-2">2. Documents (ex: MongoDB)</h5>
+                    <p>Stockage JSON/BSON semi-structuré. Parfait pour les applications Web et CMS.</p>
                 </div>
-                <div class="bg-black p-6 border border-zinc-800 rounded">
-                    <h5 class="font-bold text-lg text-white mb-2">3. Colonnes (ex: Cassandra)</h5>
-                    <p>Données organisées par colonnes. Maître de l'analytique Big Data et des logs IoT.</p>
+                <div class="bg-white p-6 border border-gray-200 rounded-lg shadow-sm">
+                    <h5 class="font-bold text-lg text-gray-900 mb-2">3. Colonnes (ex: Cassandra)</h5>
+                    <p>Données organisées par colonnes. Maître de l'analytique Big Data et IoT.</p>
                 </div>
-                <div class="bg-black p-6 border border-zinc-800 rounded">
-                    <h5 class="font-bold text-lg text-white mb-2">4. Graphes (ex: Neo4j)</h5>
-                    <p>Modélisation par nœuds et relations. Expert pour les réseaux sociaux et la détection de fraude.</p>
+                <div class="bg-white p-6 border border-gray-200 rounded-lg shadow-sm">
+                    <h5 class="font-bold text-lg text-gray-900 mb-2">4. Graphes (ex: Neo4j)</h5>
+                    <p>Modélisation par nœuds et relations. Expert pour les réseaux sociaux.</p>
                 </div>
             </div>
         </section>
 
         <section class="gsap-section">
-            <h3 class="text-3xl md:text-4xl font-bold mb-8 flex items-center"><span class="text-agent-gold font-mono mr-4 text-2xl">03 //</span> Matrice de Comparaison des Types</h3>
+            <h3 class="text-3xl md:text-4xl font-bold mb-8 flex items-center text-gray-900"><span class="text-agent-gold font-mono mr-4 text-2xl">03 //</span> Matrice de Comparaison</h3>
             
-            
-
-            <div class="overflow-x-auto bg-zinc-900 p-6 rounded-lg border border-zinc-700">
+            <div class="overflow-x-auto bg-white p-6 rounded-lg border border-gray-200 shadow-md">
                 <table class="w-full text-left min-w-[700px]">
-                    <thead class="text-agent-green border-b border-zinc-700">
+                    <thead class="text-agent-green border-b-2 border-gray-100">
                         <tr><th class="p-3">Type</th><th class="p-3">Structure & Usage</th><th class="p-3">Atout Majeur</th><th class="p-3">Limite Majeure</th></tr>
                     </thead>
-                    <tbody class="text-sm text-gray-300">
-                        <tr class="border-b border-zinc-800">
-                            <td class="p-3 font-bold text-white">Clé-Valeur</td>
+                    <tbody class="text-sm text-gray-700">
+                        <tr class="border-b border-gray-100">
+                            <td class="p-3 font-bold text-gray-900">Clé-Valeur</td>
                             <td class="p-3">Paires simples. (Cache, Sessions).</td>
-                            <td class="p-3 text-agent-green">Vitesse pure</td>
-                            <td class="p-3 text-red-400">Requêtes limitées</td>
+                            <td class="p-3 text-agent-green font-semibold">Vitesse pure</td>
+                            <td class="p-3 text-red-600">Requêtes limitées</td>
                         </tr>
-                        <tr class="border-b border-zinc-800">
-                            <td class="p-3 font-bold text-white">Documents</td>
+                        <tr class="border-b border-gray-100">
+                            <td class="p-3 font-bold text-gray-900">Documents</td>
                             <td class="p-3">JSON/BSON. (App Web).</td>
-                            <td class="p-3 text-agent-green">Flexibilité du schéma</td>
-                            <td class="p-3 text-red-400">Transactions complexes</td>
+                            <td class="p-3 text-agent-green font-semibold">Flexibilité du schéma</td>
+                            <td class="p-3 text-red-600">Transactions complexes</td>
                         </tr>
-                        <tr class="border-b border-zinc-800">
-                            <td class="p-3 font-bold text-white">Colonnes</td>
+                        <tr class="border-b border-gray-100">
+                            <td class="p-3 font-bold text-gray-900">Colonnes</td>
                             <td class="p-3">Familles. (Analytics, IoT).</td>
-                            <td class="p-3 text-agent-green">Compression efficace</td>
-                            <td class="p-3 text-red-400">Complexité de configuration</td>
+                            <td class="p-3 text-agent-green font-semibold">Compression efficace</td>
+                            <td class="p-3 text-red-600">Complexité de configuration</td>
                         </tr>
                         <tr>
-                            <td class="p-3 font-bold text-white">Graphes</td>
+                            <td class="p-3 font-bold text-gray-900">Graphes</td>
                             <td class="p-3">Nœuds et relations. (Réseaux sociaux).</td>
-                            <td class="p-3 text-agent-green">Relations complexes</td>
-                            <td class="p-3 text-red-400">Difficile à distribuer</td>
+                            <td class="p-3 text-agent-green font-semibold">Relations complexes</td>
+                            <td class="p-3 text-red-600">Difficile à distribuer</td>
                         </tr>
                     </tbody>
                 </table>
@@ -151,15 +144,15 @@
 
         <section class="gsap-section grid md:grid-cols-2 gap-12 items-center">
             <div>
-                <h3 class="text-3xl font-bold mb-6 flex items-center"><span class="text-agent-gold font-mono mr-4 text-2xl">04 //</span> L'ADN NoSQL : Le Format JSON</h3>
-                <p class="text-gray-300 mb-4">Le JSON (JavaScript Object Notation) est la base du stockage dans MongoDB. Il est lisible pour l'humain et très rapide à parser pour les machines.</p>
-                <ul class="space-y-3 text-sm text-gray-400">
-                    <li><b class="text-white">Objets { } :</b> Collections de paires clé-valeur.</li>
-                    <li><b class="text-white">Tableaux [ ] :</b> Listes ordonnées de valeurs.</li>
-                    <li><b class="text-white">Imbrication :</b> La vraie puissance. Un document peut en contenir d'autres à l'infini.</li>
+                <h3 class="text-3xl font-bold mb-6 flex items-center text-gray-900"><span class="text-agent-gold font-mono mr-4 text-2xl">04 //</span> L'ADN NoSQL : Le Format JSON</h3>
+                <p class="text-gray-700 mb-4">Le JSON (JavaScript Object Notation) est la base du stockage dans MongoDB. Il est lisible pour l'humain et très rapide à parser pour les machines.</p>
+                <ul class="space-y-3 text-sm text-gray-600">
+                    <li><b class="text-gray-900">Objets { } :</b> Collections de paires clé-valeur.</li>
+                    <li><b class="text-gray-900">Tableaux [ ] :</b> Listes ordonnées de valeurs.</li>
+                    <li><b class="text-gray-900">Imbrication :</b> Un document peut en contenir d'autres à l'infini.</li>
                 </ul>
             </div>
-            <pre class="bg-black text-agent-green p-4 text-xs font-mono rounded border border-zinc-700 overflow-x-auto shadow-[0_0_15px_rgba(0,255,65,0.1)]">
+            <pre class="bg-gray-900 text-agent-green p-6 text-sm font-mono rounded-lg overflow-x-auto shadow-lg">
 {
   "nom": "Guarraz",
   "prenom": "Mouad",
@@ -173,53 +166,48 @@
         </section>
 
         <section class="gsap-section">
-            <h3 class="text-3xl md:text-4xl font-bold mb-8 flex items-center"><span class="text-agent-gold font-mono mr-4 text-2xl">05 //</span> Métamorphose : SQL vers MongoDB</h3>
+            <h3 class="text-3xl md:text-4xl font-bold mb-8 flex items-center text-gray-900"><span class="text-agent-gold font-mono mr-4 text-2xl">05 //</span> Métamorphose : SQL vers MongoDB</h3>
             
-            
-
             <div class="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
-                <div class="bg-black p-6 border border-zinc-800 rounded-lg">
+                <div class="bg-white p-6 border border-gray-200 rounded-lg shadow-sm">
                     <p class="text-gray-500 mb-2">Concept</p>
-                    <p class="font-bold line-through text-red-500">Tables</p>
+                    <p class="font-bold line-through text-red-600">Tables</p>
                     <p class="font-bold text-agent-green text-lg">Collections</p>
                 </div>
-                <div class="bg-black p-6 border border-zinc-800 rounded-lg">
+                <div class="bg-white p-6 border border-gray-200 rounded-lg shadow-sm">
                     <p class="text-gray-500 mb-2">Donnée</p>
-                    <p class="font-bold line-through text-red-500">Lignes</p>
+                    <p class="font-bold line-through text-red-600">Lignes</p>
                     <p class="font-bold text-agent-green text-lg">Documents JSON</p>
                 </div>
-                <div class="bg-black p-6 border border-zinc-800 rounded-lg">
+                <div class="bg-white p-6 border border-gray-200 rounded-lg shadow-sm">
                     <p class="text-gray-500 mb-2">Relation</p>
-                    <p class="font-bold line-through text-red-500">Jointures</p>
+                    <p class="font-bold line-through text-red-600">Jointures</p>
                     <p class="font-bold text-agent-green text-lg">Imbrication</p>
                 </div>
-                <div class="bg-black p-6 border border-zinc-800 rounded-lg">
+                <div class="bg-white p-6 border border-gray-200 rounded-lg shadow-sm">
                     <p class="text-gray-500 mb-2">Architecture</p>
-                    <p class="font-bold line-through text-red-500">Schéma Fixe</p>
+                    <p class="font-bold line-through text-red-600">Schéma Fixe</p>
                     <p class="font-bold text-agent-green text-lg">Schéma Flexible</p>
                 </div>
             </div>
-            <p class="text-center text-gray-400 mt-6 text-sm">Les tables rigides deviennent des collections flexibles contenant des documents hétérogènes autonomes.</p>
         </section>
 
         <section class="gsap-section">
-            <h3 class="text-3xl md:text-4xl font-bold mb-8 flex items-center"><span class="text-agent-gold font-mono mr-4 text-2xl">06 //</span> Stratégie des Liens (Embedding vs Referencing)</h3>
+            <h3 class="text-3xl md:text-4xl font-bold mb-8 flex items-center text-gray-900"><span class="text-agent-gold font-mono mr-4 text-2xl">06 //</span> Stratégie des Liens</h3>
             
-            
-
             <div class="grid md:grid-cols-2 gap-8">
-                <div class="border border-agent-green p-6 rounded bg-agent-green/5">
+                <div class="border border-green-200 p-6 rounded-lg bg-green-50">
                     <h4 class="text-2xl font-bold text-agent-green mb-4">A. Embedding (Imbrication)</h4>
-                    <p class="text-gray-300 text-sm mb-4">Intégration complète des données liées dans un seul document (ex: Le client possède directement ses adresses dans un tableau [ ]).</p>
-                    <ul class="text-xs text-gray-400 space-y-1">
+                    <p class="text-gray-700 text-sm mb-4">Intégration complète des données liées dans un seul document (ex: Le client possède directement ses adresses dans un tableau [ ]).</p>
+                    <ul class="text-xs text-gray-600 space-y-1">
                         <li>✅ <b>Vitesse Extrême :</b> Pas de jointure, 1 seule requête suffit.</li>
                         <li>✅ <b>Usage :</b> Relations 1:1 et 1:N lues ensemble.</li>
                     </ul>
                 </div>
-                <div class="border border-agent-gold p-6 rounded bg-agent-gold/5">
+                <div class="border border-yellow-200 p-6 rounded-lg bg-yellow-50">
                     <h4 class="text-2xl font-bold text-agent-gold mb-4">B. Referencing (Références)</h4>
-                    <p class="text-gray-300 text-sm mb-4">Stockage d'identifiants (ObjectIDs) pointant vers d'autres documents (ex: Une commande qui contient l'ID du client).</p>
-                    <ul class="text-xs text-gray-400 space-y-1">
+                    <p class="text-gray-700 text-sm mb-4">Stockage d'identifiants (ObjectIDs) pointant vers d'autres documents (ex: Une commande qui contient l'ID du client).</p>
+                    <ul class="text-xs text-gray-600 space-y-1">
                         <li>✅ <b>Intégrité :</b> Évite la duplication, mises à jour faciles.</li>
                         <li>✅ <b>Usage :</b> Relations N:M ou données lourdes.</li>
                     </ul>
@@ -228,59 +216,59 @@
         </section>
 
         <section class="gsap-section">
-            <h3 class="text-3xl md:text-4xl font-bold mb-8 flex items-center"><span class="text-agent-gold font-mono mr-4 text-2xl">07 //</span> Architecture Interne MongoDB</h3>
+            <h3 class="text-3xl md:text-4xl font-bold mb-8 flex items-center text-gray-900"><span class="text-agent-gold font-mono mr-4 text-2xl">07 //</span> Architecture Interne MongoDB</h3>
             
-            <div class="space-y-6 text-gray-300">
+            <div class="space-y-6 text-gray-700">
                 <div class="flex items-start">
-                    <div class="bg-agent-green text-black font-bold px-3 py-1 rounded mr-4 mt-1">1</div>
+                    <div class="bg-agent-green text-white font-bold px-3 py-1 rounded mr-4 mt-1">1</div>
                     <div>
-                        <h4 class="text-white font-bold text-xl">Base de Données</h4>
+                        <h4 class="text-gray-900 font-bold text-xl">Base de Données</h4>
                         <p class="text-sm">Le conteneur logique de plus haut niveau qui regroupe plusieurs collections (ex: <code class="text-agent-gold">ecommerce</code>).</p>
                     </div>
                 </div>
                 <div class="flex items-start">
-                    <div class="bg-agent-green text-black font-bold px-3 py-1 rounded mr-4 mt-1">2</div>
+                    <div class="bg-agent-green text-white font-bold px-3 py-1 rounded mr-4 mt-1">2</div>
                     <div>
-                        <h4 class="text-white font-bold text-xl">Collections</h4>
+                        <h4 class="text-gray-900 font-bold text-xl">Collections</h4>
                         <p class="text-sm">Groupes de documents similaires (ex: <code class="text-agent-gold">products</code>).</p>
                     </div>
                 </div>
                 <div class="flex items-start">
-                    <div class="bg-agent-green text-black font-bold px-3 py-1 rounded mr-4 mt-1">3</div>
+                    <div class="bg-agent-green text-white font-bold px-3 py-1 rounded mr-4 mt-1">3</div>
                     <div>
-                        <h4 class="text-white font-bold text-xl">Documents</h4>
+                        <h4 class="text-gray-900 font-bold text-xl">Documents</h4>
                         <p class="text-sm">Enregistrements individuels JSON/BSON avec un identifiant unique obligatoire <code class="text-agent-gold">_id</code>.</p>
                     </div>
                 </div>
-                <div class="mt-6 p-4 bg-zinc-800 border-l-4 border-agent-gold rounded text-sm italic">
+                <div class="mt-6 p-4 bg-gray-100 border-l-4 border-agent-gold rounded-lg text-sm italic">
                     <b class="text-agent-gold">Le Namespace :</b> C'est la combinaison unique `BaseDeDonnées.Collection`. <br>
-                    Exemple : <code class="text-white">ecommerce.products</code>.
+                    Exemple : <code class="text-gray-900 font-mono">ecommerce.products</code>.
                 </div>
             </div>
         </section>
 
-        <section id="cheatsheet" class="gsap-section border-t-4 border-agent-green pt-10">
+        <section id="cheatsheet" class="gsap-section border-t-2 border-gray-200 pt-10">
             <div class="flex justify-between items-center mb-8">
-                <h3 class="text-3xl font-black text-white">RÉSUMÉ / CHEAT SHEET 007</h3>
-                <button onclick="window.print()" class="bg-agent-gold text-black font-bold px-4 py-2 rounded flex items-center shadow-lg hover:scale-105 transition">
+                <h3 class="text-3xl font-black text-gray-900">RÉSUMÉ / CHEAT SHEET 007</h3>
+                <button onclick="window.print()" class="bg-gray-900 text-white font-bold px-4 py-2 rounded flex items-center shadow-md hover:bg-agent-green transition">
                     <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
                     TÉLÉCHARGER (PDF)
                 </button>
             </div>
             
-            <div class="overflow-x-auto bg-white text-black rounded-lg shadow-xl print:shadow-none">
+            <div class="overflow-x-auto bg-white border border-gray-200 rounded-lg shadow-sm print:shadow-none">
                 <table class="w-full text-left min-w-[600px]">
-                    <thead class="bg-gray-200">
+                    <thead class="bg-gray-100 text-gray-800">
                         <tr><th class="p-4 w-1/4">Concept / Action</th><th class="p-4 w-1/3">Syntaxe / Type</th><th class="p-4">Détail</th></tr>
                     </thead>
-                    <tbody class="divide-y divide-gray-300 font-mono text-sm">
-                        <tr><td class="p-4 font-bold">Concept Central</td><td class="p-4">Scalabilité Horizontale</td><td class="p-4">Ajout de serveurs (vs RAM en SQL).</td></tr>
-                        <tr><td class="p-4 font-bold">Connexion</td><td class="p-4"><code>use nom_db</code></td><td class="p-4">Sélectionne ou crée la DB.</td></tr>
-                        <tr><td class="p-4 font-bold">Insertion Simple</td><td class="p-4"><code>db.coll.insertOne({...})</code></td><td class="p-4">Crée la collection implicitement.</td></tr>
-                        <tr><td class="p-4 font-bold">Lecture Totale</td><td class="p-4"><code>db.coll.find()</code></td><td class="p-4">Récupère tous les documents.</td></tr>
-                        <tr><td class="p-4 font-bold text-green-700">Filtre : Supérieur à</td><td class="p-4 text-green-700"><code>{ prix: { $gt: 100 } }</code></td><td class="p-4">Greater Than.</td></tr>
-                        <tr><td class="p-4 font-bold text-green-700">Filtre : Existence</td><td class="p-4 text-green-700"><code>{ champ: { $exists: true } }</code></td><td class="p-4">Vérifie si le champ existe.</td></tr>
-                        <tr><td class="p-4 font-bold">Modélisation 1:N</td><td class="p-4">Embedding (Imbrication)</td><td class="p-4">Tableaux `[ ]` dans le document.</td></tr>
+                    <tbody class="divide-y divide-gray-200 font-mono text-sm text-gray-600">
+                        <tr><td class="p-4 font-bold text-gray-900">Concept Central</td><td class="p-4">Scalabilité Horizontale</td><td class="p-4">Ajout de serveurs (vs RAM en SQL).</td></tr>
+                        <tr><td class="p-4 font-bold text-gray-900">Connexion</td><td class="p-4"><code>use nom_db</code></td><td class="p-4">Sélectionne ou crée la DB.</td></tr>
+                        <tr><td class="p-4 font-bold text-gray-900">Insertion Simple</td><td class="p-4"><code>db.coll.insertOne({...})</code></td><td class="p-4">Crée la collection implicitement.</td></tr>
+                        <tr><td class="p-4 font-bold text-gray-900">Lecture Totale</td><td class="p-4"><code>db.coll.find()</code></td><td class="p-4">Récupère tous les documents.</td></tr>
+                        <tr><td class="p-4 font-bold text-agent-green">Filtre : Supérieur à</td><td class="p-4 text-agent-green"><code>{ prix: { $gt: 100 } }</code></td><td class="p-4">Greater Than.</td></tr>
+                        <tr><td class="p-4 font-bold text-agent-green">Filtre : Existence</td><td class="p-4 text-agent-green"><code>{ champ: { $exists: true } }</code></td><td class="p-4">Vérifie si le champ existe.</td></tr>
+                        <tr><td class="p-4 font-bold text-gray-900">Modélisation 1:N</td><td class="p-4">Embedding (Imbrication)</td><td class="p-4">Tableaux `[ ]` dans le document.</td></tr>
                     </tbody>
                 </table>
             </div>

@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>007 | Laboratoire 3D & JSON Flottant</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = { theme: { extend: { fontFamily: { sans: ['Inter'], mono: ['JetBrains Mono'] }, colors: { 'agent-green': '#00a82d', 'agent-gold': '#b8860b' } } } }
+    </script>
+    <style>
+        body { margin: 0; overflow: hidden; background-color: #050505; color: #fff; touch-action: none; }
+        #canvas-container { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; cursor: grab; }
+        #canvas-container:active { cursor: grabbing; }
+        .ui-layer { position: absolute; z-index: 10; pointer-events: none; }
+        .interactive { pointer-events: auto; }
+        .glass { background: rgba(5, 5, 5, 0.85); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.1); box-shadow: 0 10px 30px rgba(0,0,0,0.8); }
+        .active-btn { background-color: #00a82d !important; color: #050505 !important; font-weight: bold; border-color: #00a82d !important; box-shadow: 0 0 15px rgba(0, 168, 45, 0.4); }
+        .custom-scroll::-webkit-scrollbar { width: 4px; }
+        .custom-scroll::-webkit-scrollbar-thumb { background: #333; border-radius: 4px; }
+        /* Animation fluide pour le panneau */
+        .panel-hidden { transform: translateX(-120%); opacity: 0; }
+        #open-panel-btn { display: none; }
+        .panel-hidden ~ #open-panel-btn { display: flex; }
+    </style>
+</head>
+<body class="h-[100dvh] flex flex-col font-sans">
+
+    <nav class="ui-layer w-full top-0 px-6 py-4 flex justify-between items-center z-50">
+        <h1 class="font-mono text-xl font-bold text-agent-gold tracking-widest hidden md:block">LABO<span class="text-white">3D</span></h1>
+        <div class="flex space-x-3 ml-auto md:ml-0">
+            <button id="reset-cam-btn" class="interactive font-mono text-xs font-bold text-black bg-white hover:bg-agent-green transition px-4 py-2 rounded-full shadow-lg">
+                ◎ RECADRER
+            </button>
+            <a href="index.html" class="interactive font-mono text-xs text-gray-400 hover:text-white transition px-4 py-2 bg-gray-900 border border-gray-700 rounded-full shadow-lg">← RETOUR</a>
+        </div>
+    </nav>
+
+    <button id="open-panel-btn" class="interactive ui-layer top-20 left-4 bg-gray-800 text-white p-3 rounded-full shadow-lg border border-gray-600 hover:bg-agent-green transition">
+        📖 INFO
+    </button>
+
+    <div class="ui-layer top-20 left-4 md:left-10 w-[90%] md:w-[420px] max-h-[70vh] glass p-6 rounded-xl transition-all duration-500 flex flex-col interactive" id="info-panel">
+        
+        <div class="flex justify-between items-start mb-1">
+            <h2 class="text-xs text-gray-500 font-mono tracking-widest uppercase" id="arch-type">INITIALISATION</h2>
+            <button id="close-panel-btn" class="text-gray-400 hover:text-white bg-gray-800 hover:bg-red-600 px-2 py-1 rounded text-xs font-mono transition">
+                [ - ] RÉDUIRE
+            </button>
+        </div>
+        
+        <h3 class="text-3xl font-black text-white mb-3 leading-tight" id="arch-title">BIG DATA BRUT</h3>
+        
+        <div class="flex-1 overflow-y-auto custom-scroll pr-2 space-y-4 text-sm text-gray-300">
+            <p id="arch-def" class="leading-relaxed">Chargement du flux de données...</p>
+            <div id="arch-mechanics" class="border-l-2 border-agent-gold pl-3 py-1 font-mono text-xs text-gray-400"></div>
+            <div id="arch-examples" class="bg-gray-900 p-3 rounded text-xs"></div>
+        </div>
+
+        <div class="mt-4 pt-4 border-t border-gray-800 grid grid-cols-2 gap-4 text-xs font-mono">
+            <div><p class="text-gray-600">Complexité</p><p class="text-white font-bold" id="arch-complexity">N/A</p></div>
+            <div><p class="text-gray-600">Modèle CAP</p><p class="text-white font-bold" id="arch-cap">AP / CP</p></div>
+        </div>
+    </div>
+
+    <div class="ui-layer bottom-8 w-full flex justify-center z-50 px-4">
+        <div class="glass p-2 rounded-full flex space-x-2 interactive overflow-x-auto no-scrollbar max-w-full">
+            <button class="control-btn px-6 py-3 rounded-full text-xs md:text-sm font-mono text-gray-400 border border-gray-700 transition whitespace-nowrap" data-mode="raw" data-color="#ffffff">00. CHAOS</button>
+            <button class="control-btn px-6 py-3 rounded-full text-xs md:text-sm font-mono text-gray-400 border border-gray-700 transition whitespace-nowrap" data-mode="kv" data-color="#b8860b">01. CLÉ-VALEUR</button>
+            <button class="control-btn px-6 py-3 rounded-full text-xs md:text-sm font-mono text-gray-400 border border-gray-700 transition whitespace-nowrap" data-mode="doc" data-color="#00a82d">02. DOCUMENTS</button>
+            <button class="control-btn px-6 py-3 rounded-full text-xs md:text-sm font-mono text-gray-400 border border-gray-700 transition whitespace-nowrap" data-mode="col" data-color="#3b82f6">03. COLONNES</button>
+            <button class="control-btn px-6 py-3 rounded-full text-xs md:text-sm font-mono text-gray-400 border border-gray-700 transition whitespace-nowrap" data-mode="graph" data-color="#a855f7">04. GRAPHES</button>
+            <button class="control-btn px-6 py-3 rounded-full text-xs md:text-sm font-mono text-gray-400 border border-gray-700 transition whitespace-nowrap" data-mode="shard" data-color="#ff003c">05. SHARDING</button>
+            <button class="control-btn px-6 py-3 rounded-full text-xs md:text-sm font-mono text-gray-400 border border-gray-700 transition whitespace-nowrap" data-mode="embed" data-color="#00ffff">06. IMBRICATION</button>
+        </div>
+    </div>
+
+    <div id="canvas-container" class="interactive"></div>
+
+    <script>
+        /* =========================================================================
+           1. UI ACTIONS (Panneau Rétractable)
+           ========================================================================= */
+        const infoPanel = document.getElementById('info-panel');
+        document.getElementById('close-panel-btn').addEventListener('click', () => {
+            infoPanel.classList.add('panel-hidden');
+        });
+        document.getElementById('open-panel-btn').addEventListener('click', () => {
+            infoPanel.classList.remove('panel-hidden');
+        });
+
+        /* =========================================================================
+           2. DATA TEXTUELLE (Encyclopédie Restée Identique)
+           ========================================================================= */
+        const knowledgeBase = {
+            raw: { type: "Data Lake", title: "LE CHAOS (RAW DATA)", def: "Représentation de 3000 unités de Big Data avant traitement. Logs serveurs, clics utilisateurs, et flux IoT.", mechanics: "MÉCANIQUE : Sans indexation, trouver une donnée nécessite un 'Full Scan'.", examples: "Industrie : Ingestion Kafka, Amazon S3.", complexity: "O(N)", cap: "Aucune", color: "#ffffff" },
+            kv: { type: "Accès en Temps Réel", title: "CLÉ-VALEUR", def: "Chaque donnée est un bloc isolé, accessible via une clé unique. Pas de jointure, juste de la vitesse pure.", mechanics: "MÉCANIQUE : Hash Tables en RAM.", examples: "Industrie : Cache Redis, Paniers Amazon.", complexity: "O(1)", cap: "AP", color: "#b8860b" },
+            doc: { type: "Base Application", title: "DOCUMENTS (JSON)", def: "Parfait pour le Web. Un document peut contenir des sous-documents imbriqués, remplaçant les jointures.", mechanics: "MÉCANIQUE : Schéma flexible (Schema-less).", examples: "Industrie : MongoDB (CMS, Uber).", complexity: "O(log N)", cap: "CP ou AP", color: "#00a82d" },
+            col: { type: "Analytique", title: "COLONNES", def: "La base stocke par colonnes. Compression extrême pour les données temporelles.", mechanics: "MÉCANIQUE : Écriture séquentielle massive.", examples: "Industrie : Cassandra (Spotify, Météo).", complexity: "O(1) Écriture", cap: "AP", color: "#3b82f6" },
+            graph: { type: "Relations", title: "GRAPHES & NOEUDS", def: "Stocke les relations complexes. Excellent pour les recommandations et les réseaux.", mechanics: "MÉCANIQUE : Index-free adjacency.", examples: "Industrie : Neo4j (Netflix, Fraude bancaire).", complexity: "O(1) Traversée", cap: "CP", color: "#a855f7" },
+            shard: { type: "Architecture Serveur", title: "SHARDING", def: "La Scalabilité Horizontale. La base est coupée en morceaux (Shards) répartis sur plusieurs serveurs.", mechanics: "MÉCANIQUE : Routage via Clé de Shard.", examples: "Avantage : Capacités Pétaoctets à bas coût.", complexity: "Parallélisme", cap: "P", color: "#ff003c" },
+            embed: { type: "Modélisation", title: "IMBRICATION", def: "L'alternative aux Jointures. Les données liées sont encapsulées dans un seul super-document.", mechanics: "MÉCANIQUE : Zéro Jointure Disque.", examples: "Avantage : Récupération instantanée.", complexity: "Extrême", cap: "Flexibilité", color: "#00ffff" }
+        };
+
+        /* =========================================================================
+           3. MOTEUR 3D & GÉNÉRATION DE TEXTE JSON FLOTTANT
+           ========================================================================= */
+        const container = document.getElementById('canvas-container');
+        const scene = new THREE.Scene();
+        scene.fog = new THREE.FogExp2(0x050505, 0.015);
+
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 150);
+        camera.position.set(0, 5, 25);
+
+        const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        container.appendChild(renderer.domElement);
+
+        const controls = new THREE.OrbitControls(camera, renderer.domElement);
+        controls.enableDamping = true; controls.dampingFactor = 0.05;
+
+        // --- GÉNÉRATION DES DONNÉES (PARTICULES STANDARDS) ---
+        const particleCount = 2800; // Moins de points pour faire place au texte
+        const geometry = new THREE.BufferGeometry();
+        const positions = new Float32Array(particleCount * 3);
+        const targetPositions = new Float32Array(particleCount * 3);
+        const colors = new Float32Array(particleCount * 3);
+        const targetColors = new Float32Array(particleCount * 3);
+        const phaseOffsets = new Float32Array(particleCount);
+
+        for (let i = 0; i < particleCount; i++) {
+            const i3 = i * 3;
+            positions[i3] = (Math.random() - 0.5) * 50; positions[i3 + 1] = (Math.random() - 0.5) * 50; positions[i3 + 2] = (Math.random() - 0.5) * 50;
+            targetPositions[i3] = positions[i3]; targetPositions[i3+1] = positions[i3+1]; targetPositions[i3+2] = positions[i3+2];
+            colors[i3] = 1; colors[i3+1] = 1; colors[i3+2] = 1;
+            targetColors[i3] = 1; targetColors[i3+1] = 1; targetColors[i3+2] = 1;
+            phaseOffsets[i] = Math.random() * Math.PI * 2;
+        }
+
+        geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+        geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+        const material = new THREE.PointsMaterial({ size: 0.2, vertexColors: true, transparent: true, opacity: 0.8 });
+        const particleSystem = new THREE.Points(geometry, material);
+        scene.add(particleSystem);
+
+        // --- NOUVEAUTÉ : GÉNÉRATION DU TEXTE JSON FLOTTANT ---
+        const textSprites = [];
+        const jsonExamples = [
+            '{ "id": 104, "status": "active" }', '{ "user": "007", "role": "admin" }', 
+            '{ "temp": 24.5, "sensor": "T-09" }', '{ "cart": ["laptop", "mouse"] }',
+            '{ "log": "SUCCESS", "code": 200 }', '{ "loc": [33.9, -6.8], "city": "Rabat" }',
+            '{ "db": "mongodb", "cluster": 1 }', '{ "action": "SELECT", "time": 0.02 }'
+        ];
+
+        function createTextSprite(message) {
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            canvas.width = 512; canvas.height = 128;
+            
+            ctx.fillStyle = 'rgba(5, 5, 5, 0.7)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            ctx.font = "bold 40px 'JetBrains Mono'";
+            ctx.fillStyle = '#00ff41'; // Vert Code
+            ctx.textAlign = "center";
+            ctx.textBaseline = "middle";
+            ctx.fillText(message, canvas.width / 2, canvas.height / 2);
+
+            const texture = new THREE.CanvasTexture(canvas);
+            const spriteMaterial = new THREE.SpriteMaterial({ map: texture });
+            return new THREE.Sprite(spriteMaterial);
+        }
+
+        // Créer 200 étiquettes JSON
+        for (let i = 0; i < 200; i++) {
+            const jsonStr = jsonExamples[Math.floor(Math.random() * jsonExamples.length)];
+            const sprite = createTextSprite(jsonStr);
+            sprite.scale.set(4, 1, 1);
+            sprite.position.set((Math.random() - 0.5) * 50, (Math.random() - 0.5) * 50, (Math.random() - 0.5) * 50);
+            
+            // On attache les attributs pour GSAP
+            sprite.userData = { targetPos: sprite.position.clone(), phase: Math.random() * Math.PI * 2 };
+            scene.add(sprite);
+            textSprites.push(sprite);
+        }
+
+        /* =========================================================================
+           4. ALGORITHMES DE TRANSFORMATION (Particules + Sprites JSON)
+           ========================================================================= */
+        function transformArchitecture(mode) {
+            const pos = particleSystem.geometry.attributes.position.array;
+
+            // Fonction utilitaire pour calculer la position selon le mode
+            function getPosition(index, total) {
+                if (mode === 'raw') return new THREE.Vector3((Math.random() - 0.5) * 60, (Math.random() - 0.5) * 60, (Math.random() - 0.5) * 60);
+                if (mode === 'kv') return new THREE.Vector3(index % 2 === 0 ? -6 : 6, (Math.floor(index / 2) % 30 - 15) * 1.5, (Math.floor(index / 60) - 20) * 1.5);
+                if (mode === 'doc') {
+                    const phi = Math.acos(-1 + (2 * index) / total); const theta = Math.sqrt(total * Math.PI) * phi;
+                    const r = (index % 3 === 0) ? 6 : (index % 2 === 0 ? 12 : 18);
+                    return new THREE.Vector3(r * Math.cos(theta) * Math.sin(phi), r * Math.sin(theta) * Math.sin(phi), r * Math.cos(phi));
+                }
+                if (mode === 'col') return new THREE.Vector3((index % 10 - 4.5) * 3, (Math.floor(index / 10) - 150) * 0.15, Math.sin(index % 10) * 2);
+                if (mode === 'graph') {
+                    const cluster = Math.floor(index / (total/10)); const c = new THREE.Vector3(Math.sin(cluster)*15, Math.cos(cluster)*15, Math.sin(cluster*0.5)*15);
+                    return new THREE.Vector3(c.x + (Math.random() - 0.5)*8, c.y + (Math.random() - 0.5)*8, c.z + (Math.random() - 0.5)*8);
+                }
+                if (mode === 'shard') return new THREE.Vector3(((index % 3 - 1) * 25) + (Math.random() - 0.5)*10, (Math.random() - 0.5)*10, (Math.random() - 0.5)*10);
+                if (mode === 'embed') {
+                    if (index < total * 0.3) return new THREE.Vector3((Math.random() - 0.5)*4, (Math.random() - 0.5)*4, (Math.random() - 0.5)*4);
+                    const ang = Math.random() * Math.PI * 2; const d = 10 + Math.random()*5;
+                    return new THREE.Vector3(Math.cos(ang)*d, (Math.random()-0.5)*2, Math.sin(ang)*d);
+                }
+            }
+
+            // Mettre à jour les particules
+            for (let i = 0; i < particleCount; i++) {
+                const target = getPosition(i, particleCount);
+                targetPositions[i*3] = target.x; targetPositions[i*3+1] = target.y; targetPositions[i*3+2] = target.z;
+            }
+            gsap.to(pos, { endArray: targetPositions, duration: 2.5, ease: "power3.inOut", onUpdate: () => particleSystem.geometry.attributes.position.needsUpdate = true });
+
+            // Mettre à jour les SPRITES JSON
+            textSprites.forEach((sprite, index) => {
+                const target = getPosition(index, textSprites.length);
+                gsap.to(sprite.position, { x: target.x, y: target.y, z: target.z, duration: 2.5, ease: "power3.inOut" });
+            });
+        }
+
+        function applyColor(hexCode) {
+            const color = new THREE.Color(hexCode);
+            gsap.to(targetColors, { duration: 1.5, onUpdate: () => { 
+                for (let i = 0; i < particleCount; i++) { colors[i*3] = color.r; colors[i*3+1] = color.g; colors[i*3+2] = color.b; }
+                particleSystem.geometry.attributes.color.needsUpdate = true;
+            }});
+        }
+
+        // 5. BOUTONS & ANIMATION
+        document.getElementById('reset-cam-btn').addEventListener('click', () => {
+            gsap.to(camera.position, { x: 0, y: 5, z: 25, duration: 1.5, ease: "power2.inOut" });
+            gsap.to(controls.target, { x: 0, y: 0, z: 0, duration: 1.5, ease: "power2.inOut" });
+        });
+
+        const buttons = document.querySelectorAll('.control-btn');
+        buttons.forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const mode = e.target.getAttribute('data-mode');
+                const color = e.target.getAttribute('data-color');
+                buttons.forEach(b => b.classList.remove('active-btn'));
+                e.target.classList.add('active-btn');
+                
+                const data = knowledgeBase[mode];
+                document.getElementById('arch-type').innerText = data.type;
+                document.getElementById('arch-title').innerText = data.title;
+                document.getElementById('arch-title').style.color = data.color;
+                document.getElementById('arch-def').innerText = data.def;
+                document.getElementById('arch-mechanics').innerText = data.mechanics;
+                document.getElementById('arch-examples').innerText = data.examples;
+                document.getElementById('arch-complexity').innerText = data.complexity;
+                document.getElementById('arch-cap').innerText = data.cap;
+                
+                gsap.fromTo("#info-panel", { opacity: 0, x: -30 }, { opacity: 1, x: 0, duration: 0.6 });
+
+                applyColor(color);
+                transformArchitecture(mode);
+            });
+        });
+
+        buttons[0].classList.add('active-btn');
+
+        let clock = new THREE.Clock();
+        function animate() {
+            requestAnimationFrame(animate);
+            const elapsedTime = clock.getElapsedTime();
+
+            // Flottement des Particules
+            const pos = particleSystem.geometry.attributes.position.array;
+            for (let i = 0; i < particleCount; i++) pos[i*3+1] += Math.sin(elapsedTime*2 + phaseOffsets[i]) * 0.01;
+            particleSystem.geometry.attributes.position.needsUpdate = true;
+
+            // Flottement des Textes JSON
+            textSprites.forEach(sprite => sprite.position.y += Math.sin(elapsedTime*1.5 + sprite.userData.phase) * 0.01);
+
+            controls.update();
+            renderer.render(scene, camera);
+        }
+
+        window.addEventListener('resize', () => { camera.aspect = window.innerWidth / window.innerHeight; camera.updateProjectionMatrix(); renderer.setSize(window.innerWidth, window.innerHeight); });
+        animate();
+    </script>
+</body>
+</html>
