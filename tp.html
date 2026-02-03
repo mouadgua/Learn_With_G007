@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>007 | TP Simulateur Mobile</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/canvas-confetti/1.6.0/confetti.browser.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = { theme: { extend: { fontFamily: { sans: ['Inter'], mono: ['JetBrains Mono'] }, colors: { 'agent-black': '#050505', 'agent-green': '#00ff41', 'agent-gold': '#d4af37' } } } }
+    </script>
+    <style>
+        /* Optimisations tactiles et visuelles pour Mobile */
+        body { background-color: #050505; color: #fff; touch-action: none; }
+        .terminal-scroll::-webkit-scrollbar { width: 4px; }
+        .terminal-scroll::-webkit-scrollbar-track { background: #121212; }
+        .terminal-scroll::-webkit-scrollbar-thumb { background: #333; border-radius: 2px; }
+        .fade-in { animation: fadeIn 0.3s ease-out forwards; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+        /* Empêche le zoom iOS sur l'input */
+        input[type="text"] { font-size: 16px !important; } 
+    </style>
+</head>
+<body class="h-[100dvh] flex flex-col font-sans antialiased overflow-hidden">
+
+    <nav class="bg-agent-black/90 backdrop-blur-md border-b border-agent-green/20 px-4 py-3 flex justify-between items-center shrink-0 z-50">
+        <h1 class="font-mono text-lg md:text-xl font-bold text-agent-gold">CHAMBRE<span class="text-agent-green">007</span></h1>
+        <div class="flex space-x-4 md:space-x-8 font-mono text-xs md:text-sm text-gray-400">
+            <a href="index.html" class="hover:text-agent-green transition">COURS</a>
+            <span class="text-agent-green border-b border-agent-green pb-1">TP / SIMULATEUR</span>
+            <a href="quiz.html" class="hover:text-agent-green transition">EXAMEN</a>
+        </div>
+    </nav>
+
+    <header class="bg-zinc-950 border-b border-zinc-800 p-2 md:p-3 flex flex-row justify-between items-center shrink-0 z-40">
+        <div>
+            <span class="font-bold text-xs md:text-sm text-gray-300">MONGOSH EXPERT [40 Req]</span>
+        </div>
+        <div class="flex items-center space-x-2 md:space-x-4">
+            <div class="w-20 md:w-64 bg-zinc-800 h-1.5 md:h-2 rounded-full overflow-hidden">
+                <div id="progress-bar" class="bg-agent-green h-full w-0 transition-all duration-300"></div>
+            </div>
+            <span class="font-mono text-agent-green font-bold text-xs md:text-sm"><span id="total-steps">0</span>/40</span>
+        </div>
+    </header>
+
+    <div class="flex-1 flex flex-col lg:flex-row min-h-0 h-full">
+        
+        <aside class="w-full lg:w-5/12 h-[40%] lg:h-full bg-zinc-900 border-b lg:border-b-0 lg:border-r border-zinc-800 p-3 md:p-6 overflow-y-auto space-y-4 md:space-y-6">
+            
+            <div id="ex-1" class="bg-black border border-agent-green shadow-[0_0_15px_rgba(0,255,65,0.1)] rounded-lg p-3 md:p-5 transition-all">
+                <span class="text-[10px] md:text-xs bg-agent-green text-black px-1.5 py-0.5 font-bold rounded">PHASE 1 : INGESTION (10 Req)</span>
+                <h3 class="font-bold text-sm md:text-lg mt-2 mb-1">Architecture & Insertion</h3>
+                <p class="text-gray-400 text-xs md:text-sm mb-2">Situation : Initialise la base et insère un flux massif de données.</p>
+                <div class="bg-zinc-800 p-2 rounded text-xs md:text-sm text-gray-300">
+                    <p class="font-bold text-agent-green mb-0.5">Cible :</p>
+                    <div id="current-task-1" class="font-bold text-white mb-2">Sélectionne la base 'mi6_data'.</div>
+                    <p class="font-bold text-agent-gold mb-0.5">💡 Indice :</p>
+                    <div id="current-hint-1" class="font-mono text-gray-400 bg-black p-1.5 rounded text-[11px] md:text-sm">use mi6_data</div>
+                </div>
+            </div>
+
+            <div id="ex-2" class="bg-black border border-zinc-700 rounded-lg p-3 md:p-5 opacity-50 pointer-events-none transition-all">
+                <span class="text-[10px] md:text-xs bg-zinc-700 text-white px-1.5 py-0.5 font-bold rounded">PHASE 2 : FILTRAGE (10 Req)</span>
+                <h3 class="font-bold text-sm md:text-lg mt-2 mb-1">Opérateurs & Projections</h3>
+                <p class="text-gray-400 text-xs md:text-sm mb-2">Situation : Fouille les données avec des opérateurs complexes ($gt, $in, $or).</p>
+                <div class="bg-zinc-800 p-2 rounded text-xs md:text-sm text-gray-300">
+                    <p class="font-bold text-agent-green mb-0.5">Cible :</p>
+                    <div id="current-task-2" class="font-bold text-white mb-2">Verrouillé.</div>
+                    <p class="font-bold text-agent-gold mb-0.5">💡 Indice :</p>
+                    <div id="current-hint-2" class="font-mono text-gray-400 bg-black p-1.5 rounded text-[11px] md:text-sm">...</div>
+                </div>
+            </div>
+
+            <div id="ex-3" class="bg-black border border-zinc-700 rounded-lg p-3 md:p-5 opacity-50 pointer-events-none transition-all">
+                <span class="text-[10px] md:text-xs bg-zinc-700 text-white px-1.5 py-0.5 font-bold rounded">PHASE 3 : MUTATION (10 Req)</span>
+                <h3 class="font-bold text-sm md:text-lg mt-2 mb-1">Updates & Tableaux</h3>
+                <p class="text-gray-400 text-xs md:text-sm mb-2">Situation : Modifie les structures existantes via $set, $inc, $push.</p>
+                <div class="bg-zinc-800 p-2 rounded text-xs md:text-sm text-gray-300">
+                    <p class="font-bold text-agent-green mb-0.5">Cible :</p>
+                    <div id="current-task-3" class="font-bold text-white mb-2">Verrouillé.</div>
+                    <p class="font-bold text-agent-gold mb-0.5">💡 Indice :</p>
+                    <div id="current-hint-3" class="font-mono text-gray-400 bg-black p-1.5 rounded text-[11px] md:text-sm">...</div>
+                </div>
+            </div>
+
+            <div id="ex-4" class="bg-black border border-zinc-700 rounded-lg p-3 md:p-5 opacity-50 pointer-events-none transition-all">
+                <span class="text-[10px] md:text-xs bg-zinc-700 text-white px-1.5 py-0.5 font-bold rounded">PHASE 4 : PURGE (10 Req)</span>
+                <h3 class="font-bold text-sm md:text-lg mt-2 mb-1">Embedding & Indexation</h3>
+                <p class="text-gray-400 text-xs md:text-sm mb-2">Situation : Crée des relations par imbrication (Embedding) et purge la base.</p>
+                <div class="bg-zinc-800 p-2 rounded text-xs md:text-sm text-gray-300">
+                    <p class="font-bold text-agent-green mb-0.5">Cible :</p>
+                    <div id="current-task-4" class="font-bold text-white mb-2">Verrouillé.</div>
+                    <p class="font-bold text-agent-gold mb-0.5">💡 Indice :</p>
+                    <div id="current-hint-4" class="font-mono text-gray-400 bg-black p-1.5 rounded text-[11px] md:text-sm">...</div>
+                </div>
+            </div>
+
+        </aside>
+
+        <main class="w-full lg:w-7/12 h-[60%] lg:h-full bg-black p-2 md:p-4 flex flex-col min-h-0">
+            <div class="flex-1 bg-zinc-900 border border-zinc-700 rounded-lg shadow-2xl flex flex-col overflow-hidden font-mono text-xs md:text-sm">
+                <div class="bg-zinc-800 px-3 py-1.5 md:py-2 flex items-center border-b border-zinc-700 text-gray-400 text-xs">
+                    root@terminal: <span class="text-agent-green ml-1">~/mongosh</span>
+                </div>
+                
+                <div id="terminal-out" class="flex-1 p-3 md:p-4 overflow-y-auto terminal-scroll space-y-1">
+                    <p class="text-agent-gold fade-in">> MONGOSH SYSTEM READY. [4 PHASES]</p>
+                </div>
+
+                <div class="bg-black p-2 md:p-4 border-t border-zinc-700 flex items-center">
+                    <span class="text-agent-green mr-2 font-bold">❯</span>
+                    <input type="text" id="terminal-in" class="bg-transparent border-none outline-none text-white w-full h-8 md:h-auto" placeholder="Tapez..." autocomplete="off" autocapitalize="none">
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        const input = document.getElementById('terminal-in');
+        const output = document.getElementById('terminal-out');
+        const totalStepsDisplay = document.getElementById('total-steps');
+        const progressBar = document.getElementById('progress-bar');
+        
+        let currentEx = 1;
+        let stepIndex = 0;
+        let totalProgress = 0;
+
+        // MOTEUR DE SCÉNARIO 4 PHASES (40 requêtes + Indices Uniques)
+        const missions = {
+            1: [
+                { task: "Sélectionne la base 'mi6_data'", cmd: "use mi6_data", hint: "use mi6_data" },
+                { task: "Crée la collection explicitement", cmd: "db.createCollection('agents')", hint: "db.createCollection('agents')" },
+                { task: "Insère l'agent 007 (insertOne)", cmd: "insertOne", hint: "db.agents.insertOne({nom: 'Bond', id: 7})" },
+                { task: "Insère 3 agents d'un coup (insertMany)", cmd: "insertMany", includes: "[", hint: "db.agents.insertMany([{nom: 'Q'}, {nom: 'M'}, {nom: 'Moneypenny'}])" },
+                { task: "Insère un doc avec tableau 'armes: [...]'", cmd: "insertOne", includes: "[", hint: "db.agents.insertOne({nom: 'Scaramanga', armes: ['Pistolet dOr']})" },
+                { task: "Insère un doc avec objet 'adresse: {...}'", cmd: "insertOne", includes: "{", hint: "db.agents.insertOne({nom: 'Blofeld', adresse: {ville: 'Londres'}})" },
+                { task: "Vérifie les collections", cmd: "show collections", hint: "show collections" },
+                { task: "Compte le nombre de documents", cmd: "countDocuments()", hint: "db.agents.countDocuments()" },
+                { task: "Affiche le premier document (findOne)", cmd: "findOne()", hint: "db.agents.findOne()" },
+                { task: "Statistiques de la collection", cmd: "stats()", hint: "db.agents.stats()" }
+            ],
+            2: [
+                { task: "Affiche tous les agents (find)", cmd: "find()", hint: "db.agents.find()" },
+                { task: "Filtre : id supérieur à 5 ($gt)", cmd: "find", includes: "$gt", hint: "db.agents.find({ id: { $gt: 5 } })" },
+                { task: "Filtre : id inférieur à 5 ($lt)", cmd: "find", includes: "$lt", hint: "db.agents.find({ id: { $lt: 5 } })" },
+                { task: "Filtre : id dans la liste [1, 7] ($in)", cmd: "find", includes: "$in", hint: "db.agents.find({ id: { $in: [1, 7] } })" },
+                { task: "Filtre : champ 'role' existe ($exists)", cmd: "find", includes: "$exists", hint: "db.agents.find({ role: { $exists: true } })" },
+                { task: "Condition OU explicite ($or)", cmd: "find", includes: "$or", hint: "db.agents.find({ $or: [{nom: 'Bond'}, {nom: 'M'}] })" },
+                { task: "Limite l'affichage à 2 résultats", cmd: "limit(2)", hint: "db.agents.find().limit(2)" },
+                { task: "Trie les résultats par id décroissant", cmd: "sort({id:-1})", hint: "db.agents.find().sort({id: -1})" },
+                { task: "Passe les 2 premiers résultats (skip)", cmd: "skip(2)", hint: "db.agents.find().skip(2)" },
+                { task: "Projection : Cache l'_id", cmd: "find", includes: "_id:0", hint: "db.agents.find({}, {nom: 1, _id: 0})" }
+            ],
+            3: [
+                { task: "Mise à jour d'un agent ($set)", cmd: "updateOne", includes: "$set", hint: "db.agents.updateOne({nom: 'Bond'}, { $set: {statut: 'Actif'} })" },
+                { task: "Mise à jour multiple ($set)", cmd: "updateMany", includes: "$set", hint: "db.agents.updateMany({}, { $set: {agence: 'MI6'} })" },
+                { task: "Incrémente le niveau d'un agent ($inc)", cmd: "updateOne", includes: "$inc", hint: "db.agents.updateOne({nom: 'Bond'}, { $inc: {missions: 1} })" },
+                { task: "Ajoute une arme dans un tableau ($push)", cmd: "updateOne", includes: "$push", hint: "db.agents.updateOne({nom: 'Q'}, { $push: {armes: 'Laser'} })" },
+                { task: "Retire une arme d'un tableau ($pull)", cmd: "updateOne", includes: "$pull", hint: "db.agents.updateOne({nom: 'Q'}, { $pull: {armes: 'Laser'} })" },
+                { task: "Renomme un champ ($rename)", cmd: "updateOne", includes: "$rename", hint: "db.agents.updateMany({}, { $rename: {'nom': 'alias'} })" },
+                { task: "Supprime un champ ($unset)", cmd: "updateOne", includes: "$unset", hint: "db.agents.updateOne({alias: 'M'}, { $unset: {role: ''} })" },
+                { task: "Upsert : Met à jour ou insère", cmd: "updateOne", includes: "upsert:true", hint: "db.agents.updateOne({alias: '006'}, {$set: {statut: 'KIA'}}, {upsert: true})" },
+                { task: "Remplace tout le document (replaceOne)", cmd: "replaceOne", hint: "db.agents.replaceOne({alias: 'Bond'}, {alias: 'James Bond', code: '007'})" },
+                { task: "Affiche l'agent modifié (findOne)", cmd: "findOne()", hint: "db.agents.findOne({alias: 'James Bond'})" }
+            ],
+            4: [
+                { task: "Crée un index sur le nom", cmd: "createIndex({nom:1})", hint: "db.agents.createIndex({alias: 1})" },
+                { task: "Affiche les index", cmd: "getIndexes()", hint: "db.agents.getIndexes()" },
+                { task: "Modélisation : Crée collection 'missions'", cmd: "createCollection('missions')", hint: "db.createCollection('missions')" },
+                { task: "Modélisation : Insère mission (Embedding 1:N)", cmd: "insertOne", includes: "[", hint: "db.missions.insertOne({nom: 'Spectre', agents: [{nom: 'Bond'}, {nom: 'M'}]})" },
+                { task: "Supprime l'index 'nom_1'", cmd: "dropIndex('nom_1')", hint: "db.agents.dropIndex('alias_1')" },
+                { task: "Supprime un agent (deleteOne)", cmd: "deleteOne", hint: "db.agents.deleteOne({alias: '006'})" },
+                { task: "Supprime les agents faibles (deleteMany)", cmd: "deleteMany", hint: "db.agents.deleteMany({statut: 'KIA'})" },
+                { task: "Vide la collection agents", cmd: "deleteMany({})", hint: "db.agents.deleteMany({})" },
+                { task: "Supprime la collection agents (drop)", cmd: "drop()", hint: "db.agents.drop()" },
+                { task: "Supprime la base de données", cmd: "dropDatabase()", hint: "db.dropDatabase()" }
+            ]
+        };
+
+        function writeLog(text, type = "normal") {
+            const p = document.createElement('p');
+            p.className = "fade-in ";
+            if (type === "user") p.innerHTML = `<span class="text-agent-green">❯</span> ${text}`;
+            else if (type === "success") p.className += "text-agent-green font-bold";
+            else if (type === "error") p.className += "text-red-500";
+            else if (type === "json") p.className += "text-gray-500 italic ml-2 md:ml-4";
+            p.textContent = type === "user" ? `❯ ${text}` : text;
+            output.appendChild(p);
+            // Auto-scroll pour mobile
+            output.scrollTop = output.scrollHeight; 
+        }
+
+        function updateUI() {
+            if (currentEx > 4) return;
+            const step = missions[currentEx][stepIndex];
+            document.getElementById(`current-task-${currentEx}`).textContent = `[${stepIndex + 1}/10] : ${step.task}`;
+            document.getElementById(`current-hint-${currentEx}`).textContent = step.hint;
+        }
+
+        function unlockNextExercise() {
+            document.getElementById(`ex-${currentEx}`).classList.remove('border-agent-green', 'shadow-[0_0_15px_rgba(0,255,65,0.1)]');
+            document.getElementById(`ex-${currentEx}`).classList.add('border-zinc-700');
+            
+            currentEx++;
+            if(currentEx <= 4) {
+                const nextEx = document.getElementById(`ex-${currentEx}`);
+                nextEx.classList.remove('opacity-50', 'pointer-events-none', 'border-zinc-700');
+                nextEx.classList.add('border-agent-green', 'shadow-[0_0_15px_rgba(0,255,65,0.1)]');
+                // Auto-scroll l'aside sur mobile
+                nextEx.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); 
+                updateUI();
+            } else {
+                confetti({ particleCount: 500, spread: 160, origin: { y: 0.6 } });
+                writeLog("██████████████████████████████████████████████", "success");
+                writeLog("🏆 EXCELLENCE : 40 REQUÊTES VALIDÉES. TP TERMINÉ", "success");
+                writeLog("██████████████████████████████████████████████", "success");
+                input.disabled = true;
+                input.blur(); // Cache le clavier virtuel sur mobile
+            }
+        }
+
+        updateUI();
+
+        input.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                const cmd = input.value.trim();
+                if (!cmd) return;
+                
+                writeLog(cmd, "user");
+                input.value = '';
+
+                const currentStep = missions[currentEx][stepIndex];
+                
+                // VALIDATION ENGINE
+                let isValid = cmd.includes(currentStep.cmd);
+                if (currentStep.includes) {
+                    isValid = isValid && cmd.includes(currentStep.includes);
+                }
+
+                if (isValid) {
+                    writeLog("{ status: 'ok', n: 1 }", "json");
+                    writeLog("✅ Opération réussie.", "success");
+                    
+                    totalProgress++;
+                    totalStepsDisplay.textContent = totalProgress;
+                    progressBar.style.width = (totalProgress / 40 * 100) + '%';
+
+                    stepIndex++;
+                    if (stepIndex >= 10) {
+                        writeLog(`[PHASE ${currentEx} COMPLÉTÉE]`, "success");
+                        stepIndex = 0;
+                        unlockNextExercise();
+                    } else {
+                        updateUI();
+                    }
+                } else {
+                    writeLog(`❌ Erreur. La commande attendue est : ${currentStep.hint}`, "error");
+                }
+            }
+        });
+    </script>
+</body>
+</html>

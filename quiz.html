@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="fr" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>007 | Examen d'Expertise NoSQL</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/canvas-confetti/1.6.0/confetti.browser.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = { theme: { extend: { fontFamily: { sans: ['Inter'], mono: ['JetBrains Mono'] }, colors: { 'agent-black': '#050505', 'agent-green': '#00ff41', 'agent-gold': '#d4af37', 'agent-red': '#ff003c' } } } }
+    </script>
+    <style>
+        body { background-color: #050505; color: #fff; }
+        .quiz-option:checked + label { background-color: rgba(0, 255, 65, 0.1); border-color: #00ff41; color: #fff; box-shadow: 0 0 15px rgba(0,255,65,0.2); }
+        .correct-answer { background-color: rgba(0, 255, 65, 0.2) !important; border-color: #00ff41 !important; color: #fff !important; }
+        .wrong-answer { background-color: rgba(255, 0, 60, 0.2) !important; border-color: #ff003c !important; color: #fff !important; opacity: 0.7; }
+        .rationale-box { display: none; }
+        .show-rationale { display: block; animation: slideDown 0.4s ease-out forwards; }
+        @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body class="font-sans antialiased overflow-x-hidden pb-20">
+
+    <nav class="fixed w-full bg-agent-black/90 backdrop-blur-md border-b border-agent-green/20 z-50">
+        <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
+            <h1 class="font-mono text-xl md:text-2xl font-bold text-agent-gold">CHAMBRE<span class="text-agent-green">007</span></h1>
+            <div class="space-x-2 md:space-x-6 font-mono text-xs md:text-sm text-gray-400">
+                <a href="index.html" class="hover:text-agent-green transition">COURS</a>
+                <a href="tp.html" class="hover:text-agent-green transition">SIMULATEUR</a>
+                <span class="text-agent-green border-b border-agent-green pb-1">EXAMEN EXPERT</span>
+            </div>
+        </div>
+    </nav>
+
+    <header class="pt-32 pb-12 text-center max-w-4xl mx-auto px-4">
+        <span class="text-agent-green font-mono tracking-widest uppercase mb-3 block text-sm animate-pulse">Validation de Compétences : Niveau Architecte</span>
+        <h2 class="text-4xl md:text-6xl font-black mb-6 leading-tight text-white">L'EXAMEN <span class="text-agent-gold">NOSQL</span></h2>
+        <p class="text-gray-400 text-sm md:text-base max-w-2xl mx-auto">Ce test évalue votre compréhension profonde des bases de données modernes. Un rapport détaillé sera généré à la fin.</p>
+    </header>
+
+    <main class="max-w-4xl mx-auto px-4 space-y-8" id="quiz-container">
+        </main>
+
+    <div class="text-center pt-12 pb-10">
+        <button id="submit-btn" class="bg-agent-green text-black font-bold text-lg md:text-xl px-10 md:px-16 py-4 rounded-full hover:bg-agent-gold transition shadow-[0_0_20px_#00ff41]">
+            LANCER L'ANALYSE (SOUMETTRE)
+        </button>
+    </div>
+
+    <div id="result-box" class="hidden max-w-4xl mx-auto px-4 text-center bg-black border border-agent-gold p-8 rounded-lg mt-10 mb-20 shadow-[0_0_30px_rgba(212,175,55,0.2)]">
+        <h3 class="text-2xl font-bold text-white mb-2 font-mono">RAPPORT D'AUDIT 007</h3>
+        <div class="text-6xl md:text-8xl font-black text-agent-green mb-4"><span id="final-score">0</span>%</div>
+        <p id="feedback-message" class="text-gray-300 text-lg md:text-xl mb-6">Calcul en cours...</p>
+        <p class="text-sm text-gray-500 italic">Veuillez consulter les corrections détaillées ci-dessus pour chaque question.</p>
+    </div>
+
+    <script>
+        // LA BASE DE DONNÉES DES QUESTIONS (Basée sur le PPTX)
+        const quizData = [
+            {
+                q: "Quelle est la différence fondamentale de scalabilité entre les bases SQL traditionnelles et les bases NoSQL ?",
+                options: [
+                    "SQL = Scalabilité Horizontale / NoSQL = Scalabilité Verticale",
+                    "SQL = Scalabilité Verticale (CPU/RAM) / NoSQL = Scalabilité Horizontale (Ajout de serveurs)",
+                    "Les deux utilisent la scalabilité horizontale, mais le NoSQL est plus rapide",
+                    "Le NoSQL ne peut pas être scalé car il ne respecte pas le modèle ACID"
+                ],
+                correct: 1,
+                rationale: "Le modèle relationnel (SQL) est difficile à distribuer sur plusieurs serveurs. On doit donc augmenter la puissance d'un seul serveur (Verticale). Le NoSQL est conçu pour répartir la charge sur un cluster de machines (Horizontale) [cite: 37-39]."
+            },
+            {
+                q: "Quel modèle de cohérence est utilisé par le NoSQL pour privilégier la haute disponibilité ?",
+                options: ["Le modèle ACID strict", "Le modèle relationnel 3NF", "Le modèle BASE (Cohérence éventuelle)", "Le modèle CRUD"],
+                correct: 2,
+                rationale: "Contrairement à l'ACID strict, le modèle BASE (Basically Available, Soft state, Eventual consistency) accepte que les données mettent quelques millisecondes à se synchroniser pour garantir une disponibilité maximale [cite: 40-42]."
+            },
+            {
+                q: "Quel type de base NoSQL est idéal pour modéliser des réseaux sociaux et des systèmes de recommandation ?",
+                options: ["Orientée Clé-Valeur", "Orientée Colonnes", "Orientée Documents", "Orientée Graphes (ex: Neo4j)"],
+                correct: 3,
+                rationale: "Les bases Graphes modélisent les relations complexes via des nœuds et des arcs. C'est parfait pour voir 'qui connaît qui' ou détecter des fraudes [cite: 66-67, 93-97]."
+            },
+            {
+                q: "En syntaxe JSON, que représentent les crochets [ ] ?",
+                options: ["Des Objets (Clé-Valeur)", "Des Tableaux (Listes ordonnées)", "Des Fonctions", "Des Namespaces"],
+                correct: 1,
+                rationale: "En JSON/BSON, les accolades { } représentent des objets, et les crochets [ ] représentent des tableaux (arrays), comme une liste de compétences [cite: 104-105]."
+            },
+            {
+                q: "Dans la migration du Relationnel vers MongoDB, que devient une 'Table' ?",
+                options: ["Un Document", "Une Collection", "Un Namespace", "Un Schéma"],
+                correct: 1,
+                rationale: "Les tables rigides deviennent des Collections flexibles contenant des documents hétérogènes [cite: 127-128]."
+            },
+            {
+                q: "Quand devriez-vous privilégier l'approche d'« Imbrication » (Embedding) ?",
+                options: [
+                    "Pour les relations N:M (Plusieurs-à-Plusieurs)",
+                    "Quand les données sont très lourdes et rarement consultées",
+                    "Pour les relations 1:1 ou 1:N quand les données sont toujours lues ensemble",
+                    "Pour éviter toute duplication de données"
+                ],
+                correct: 2,
+                rationale: "L'Embedding intègre les données liées dans un seul document. Cela booste les performances de lecture car une seule requête suffit (pas de jointures) ."
+            },
+            {
+                q: "Qu'est-ce qu'un « Namespace » dans MongoDB ?",
+                options: [
+                    "L'identifiant _id unique",
+                    "Le nom du serveur Cloud",
+                    "La combinaison Base de données + Collection (ex: ecommerce.products)",
+                    "Le moteur de stockage par défaut"
+                ],
+                correct: 2,
+                rationale: "Le Namespace est le chemin logique complet pour identifier une collection précise dans l'écosystème MongoDB[cite: 160]."
+            },
+            {
+                q: "Lorsqu'on utilise `insertOne()`, que se passe-t-il si la collection n'existe pas encore ?",
+                options: [
+                    "MongoDB renvoie une erreur fatale",
+                    "MongoDB crée la collection implicitement avant d'insérer le document",
+                    "Le document est stocké dans une collection temporaire",
+                    "Il faut obligatoirement utiliser db.createCollection() avant"
+                ],
+                correct: 1,
+                rationale: "C'est l'un des grands atouts de la flexibilité MongoDB : pas besoin de déclarer la structure à l'avance, la collection se crée toute seule lors de la première insertion[cite: 172]."
+            },
+            {
+                q: "Lequel de ces opérateurs permet de vérifier si un champ est PRÉSENT dans un document ?",
+                options: ["$gt", "$in", "$exists", "$set"],
+                correct: 2,
+                rationale: "L'opérateur { champ: { $exists: true } } permet de filtrer les documents en vérifiant la présence d'un champ, ce qui est très utile avec les schémas flexibles [cite: 210-211]."
+            },
+            {
+                q: "Les bases 'Orientées Colonnes' (ex: Cassandra) sont principalement utilisées pour :",
+                options: ["Le caching et les sessions", "Les CMS et sites web", "L'analytique Big Data et l'IoT (Séries temporelles)", "Les transactions financières strictes"],
+                correct: 2,
+                rationale: "Les bases colonnes excellent dans la compression et le traitement d'immenses volumes de données historiques (logs, capteurs IoT) [cite: 63-65]."
+            }
+        ];
+
+        const container = document.getElementById('quiz-container');
+
+        // Génération du HTML des questions
+        quizData.forEach((item, qIndex) => {
+            let optionsHTML = '';
+            item.options.forEach((opt, optIndex) => {
+                optionsHTML += `
+                    <div>
+                        <input type="radio" name="q${qIndex}" id="q${qIndex}_o${optIndex}" value="${optIndex}" class="quiz-option hidden">
+                        <label for="q${qIndex}_o${optIndex}" id="label_q${qIndex}_o${optIndex}" class="block p-4 border border-zinc-700 rounded-lg cursor-pointer transition text-gray-300 hover:border-agent-green hover:bg-zinc-800 text-sm md:text-base leading-relaxed">
+                            <span class="font-bold text-agent-gold mr-2">${String.fromCharCode(65 + optIndex)}.</span> ${opt}
+                        </label>
+                    </div>
+                `;
+            });
+
+            container.innerHTML += `
+                <div class="q-card bg-zinc-900 border border-zinc-800 p-6 md:p-8 rounded-xl shadow-lg" id="card_${qIndex}">
+                    <h3 class="font-bold text-lg md:text-xl mb-6 text-white leading-tight"><span class="text-agent-green font-mono">Q${qIndex + 1}.</span> ${item.q}</h3>
+                    <div class="space-y-3">
+                        ${optionsHTML}
+                    </div>
+                    <div class="rationale-box bg-black border-l-4 p-4 mt-6 rounded text-sm text-gray-300" id="rationale_${qIndex}">
+                        <p class="font-mono text-xs mb-1 uppercase tracking-wider rationale-title"></p>
+                        <p class="rationale-text">${item.rationale}</p>
+                    </div>
+                </div>
+            `;
+        });
+
+        // Animation d'entrée GSAP
+        gsap.from(".q-card", { opacity: 0, y: 30, duration: 0.8, stagger: 0.1 });
+
+        // Traitement de la soumission
+        document.getElementById('submit-btn').addEventListener('click', function() {
+            let correctCount = 0;
+            const total = quizData.length;
+
+            quizData.forEach((item, qIndex) => {
+                const selectedInput = document.querySelector(`input[name="q${qIndex}"]:checked`);
+                const rationaleBox = document.getElementById(`rationale_${qIndex}`);
+                const rationaleTitle = rationaleBox.querySelector('.rationale-title');
+
+                // Si l'utilisateur n'a pas répondu
+                if (!selectedInput) {
+                    rationaleBox.classList.add('show-rationale', 'border-yellow-500');
+                    rationaleTitle.innerText = "⚠️ Non Répondu";
+                    rationaleTitle.classList.add('text-yellow-500');
+                    return; 
+                }
+
+                const selectedVal = parseInt(selectedInput.value);
+                const isCorrect = (selectedVal === item.correct);
+
+                // Styling du label sélectionné
+                const label = document.getElementById(`label_q${qIndex}_o${selectedVal}`);
+                
+                if (isCorrect) {
+                    correctCount++;
+                    label.classList.add('correct-answer');
+                    rationaleBox.classList.add('show-rationale', 'border-agent-green');
+                    rationaleTitle.innerText = "✅ Bonne Réponse !";
+                    rationaleTitle.classList.add('text-agent-green');
+                } else {
+                    label.classList.add('wrong-answer');
+                    // Montrer la bonne réponse en vert
+                    document.getElementById(`label_q${qIndex}_o${item.correct}`).classList.add('correct-answer');
+                    rationaleBox.classList.add('show-rationale', 'border-agent-red');
+                    rationaleTitle.innerText = "❌ Réponse Incorrecte";
+                    rationaleTitle.classList.add('text-agent-red');
+                }
+            });
+
+            // Calcul du Score Final (Pourcentage)
+            const percentage = Math.round((correctCount / total) * 100);
+            
+            // Affichage UI
+            document.getElementById('final-score').innerText = percentage;
+            document.getElementById('result-box').classList.remove('hidden');
+            
+            // Animation de Scroll vers le résultat
+            window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+
+            // Messages de feedback dynamiques
+            const messageEl = document.getElementById('feedback-message');
+            if (percentage === 100) {
+                messageEl.innerHTML = "🏆 PERFECTION ATTEINTE. Vous avez le niveau d'un Ingénieur Cloud Senior.";
+                messageEl.classList.add('text-agent-gold');
+                confetti({ particleCount: 500, spread: 150, origin: { y: 0.6 } });
+            } else if (percentage >= 70) {
+                messageEl.innerHTML = "✅ Très bon travail. Vos bases sont solides pour la suite.";
+            } else {
+                messageEl.innerHTML = "⚠️ Compétences insuffisantes. Une révision du Dossier de Mission s'impose.";
+                messageEl.classList.add('text-agent-red');
+            }
+
+            // Désactivation du bouton
+            this.disabled = true;
+            this.innerText = "ANALYSE TERMINÉE";
+            this.classList.add('opacity-50', 'cursor-not-allowed');
+        });
+    </script>
+</body>
+</html>

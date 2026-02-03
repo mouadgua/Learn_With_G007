@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="fr" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>007 | Dossier NoSQL</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = { theme: { extend: { fontFamily: { sans: ['Inter'], mono: ['JetBrains Mono'] }, colors: { 'agent-black': '#050505', 'agent-green': '#00ff41', 'agent-gold': '#d4af37' } } } }
+    </script>
+    <style>body { background-color: #050505; color: #fff; }</style>
+</head>
+<body class="font-sans antialiased overflow-x-hidden">
+
+    <nav class="fixed w-full bg-agent-black/90 backdrop-blur-md border-b border-agent-green/20 z-50">
+        <div class="max-w-7xl mx-auto px-4 py-4 flex flex-col md:flex-row justify-between items-center">
+            <h1 class="font-mono text-xl md:text-2xl font-bold text-agent-gold mb-2 md:mb-0">CHAMBRE<span class="text-agent-green">007</span></h1>
+            <div class="flex flex-wrap justify-center gap-4 font-mono text-xs md:text-sm text-gray-400">
+                <a href="#cours" class="hover:text-agent-green transition border-b border-agent-green">COURS</a>
+                <a href="#cheatsheet" class="hover:text-agent-green transition">CHEAT SHEET</a>
+                <a href="tp.html" class="hover:text-agent-green transition">TP</a>
+                <a href="quiz.html" class="hover:text-agent-green transition">EXAMEN</a>
+            </div>
+        </div>
+    </nav>
+
+    <header class="min-h-screen flex items-center justify-center relative px-4 pt-20">
+        <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,_#004d16_0%,_#050505_70%)] opacity-50"></div>
+        <div class="z-10 text-center max-w-4xl" id="hero-text">
+            <p class="text-agent-green font-mono mb-4 tracking-[0.3em] uppercase animate-pulse">Classification : Top Secret</p>
+            <h2 class="text-5xl md:text-8xl font-black mb-6 leading-tight">MASTERING <span class="text-agent-green">NOSQL</span></h2>
+            <p class="text-gray-400 text-base md:text-lg mb-8 max-w-2xl mx-auto">NoSQL désigne une nouvelle génération de bases conçues pour le Big Data, assurant scalabilité horizontale et performances extrêmes.</p>
+            <a href="#cours" class="bg-agent-green text-black font-mono px-8 py-3 rounded shadow-[0_0_15px_#00ff41]">CONSULTER LE DOSSIER</a>
+        </div>
+    </header>
+
+    <main id="cours" class="max-w-7xl mx-auto px-4 py-12 md:py-20 space-y-24">
+
+        <section class="gsap-section">
+            <h3 class="text-3xl md:text-4xl font-bold mb-8"><span class="text-agent-gold font-mono mr-2">01 //</span>Choc des Architectures</h3>
+            [Image of NoSQL horizontal scalability vs SQL vertical scalability]
+            <div class="grid md:grid-cols-2 gap-8">
+                <div class="bg-black border border-zinc-800 p-6 rounded-lg">
+                    <h4 class="text-red-500 font-bold mb-4 border-b border-red-500 pb-2">Relationnel (SQL)</h4>
+                    <ul class="text-sm text-gray-400 space-y-2">
+                        <li><b>Structure :</b> Tables rigides avec schémas fixes.</li>
+                        <li><b>Scalabilité :</b> Verticale (augmentation de puissance).</li>
+                        <li><b>Transactions :</b> ACID strict, cohérence forte.</li>
+                    </ul>
+                </div>
+                <div class="bg-black border border-agent-green p-6 rounded-lg">
+                    <h4 class="text-agent-green font-bold mb-4 border-b border-agent-green pb-2">NoSQL</h4>
+                    <ul class="text-sm text-gray-400 space-y-2">
+                        <li><b>Structure :</b> Schémas flexibles et documents imbriqués.</li>
+                        <li><b>Scalabilité :</b> Horizontale (ajout de serveurs).</li>
+                        <li><b>Transactions :</b> BASE, cohérence éventuelle.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section class="gsap-section grid md:grid-cols-2 gap-12 items-center">
+            <div>
+                <h3 class="text-3xl font-bold mb-6"><span class="text-agent-gold font-mono mr-2">02 //</span>JSON & Métamorphose</h3>
+                [Image of MongoDB BSON document structure vs SQL table row]
+                <p class="text-gray-300 mb-4">Le JSON est léger et parfait pour MongoDB. Dans ce nouveau monde, la modélisation change radicalement :</p>
+                <ul class="space-y-3 text-sm">
+                    <li>Tables → <b class="text-agent-green">Collections</b>.</li>
+                    <li>Lignes → <b class="text-agent-green">Documents JSON</b>.</li>
+                    <li>Jointures → <b class="text-agent-green">Imbrication</b> (Embedding).</li>
+                </ul>
+            </div>
+            <pre class="bg-black text-agent-green p-4 text-xs font-mono rounded border border-zinc-700 overflow-x-auto">
+{
+  "_id": ObjectId("65eef..."),
+  "nom": "Dupont",
+  "competences": ["NoSQL", "React"],
+  "adresse": { "ville": "Paris" } // Imbrication
+}</pre>
+        </section>
+
+        <section id="cheatsheet" class="gsap-section border-t-4 border-agent-green pt-10">
+            <h3 class="text-3xl font-black text-center mb-8">CHEAT SHEET 007</h3>
+            <div class="overflow-x-auto bg-white text-black rounded-lg shadow-xl">
+                <table class="w-full text-left min-w-[600px]">
+                    <thead class="bg-gray-200">
+                        <tr><th class="p-4">Action</th><th class="p-4">Commande</th><th class="p-4">Explication</th></tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-300 font-mono text-sm">
+                        <tr><td class="p-4 font-bold">Connexion Base</td><td class="p-4"><code>use nom_db</code></td><td class="p-4">Crée ou sélectionne la base.</td></tr>
+                        <tr><td class="p-4 font-bold">Insérer</td><td class="p-4"><code>db.coll.insertOne({})</code></td><td class="p-4">Crée la collection implicitement.</td></tr>
+                        <tr><td class="p-4 font-bold">Filtrer (> 100)</td><td class="p-4"><code>{ prix: { $gt: 100 } }</code></td><td class="p-4">Greater Than.</td></tr>
+                        <tr><td class="p-4 font-bold">Vérifier Champ</td><td class="p-4"><code>{ champ: { $exists: true } }</code></td><td class="p-4">Vérifie l'existence.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+    </main>
+
+    <script>
+        gsap.registerPlugin(ScrollTrigger);
+        gsap.from("#hero-text > *", { opacity: 0, y: 30, duration: 1, stagger: 0.2 });
+        gsap.utils.toArray('.gsap-section').forEach(section => gsap.from(section, { opacity: 0, y: 50, duration: 1, scrollTrigger: { trigger: section, start: "top 80%" } }));
+    </script>
+</body>
+</html>
